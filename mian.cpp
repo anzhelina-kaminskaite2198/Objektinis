@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <iomanip>
+#include <cmath>
 using namespace std;
 
 // string tipo: studento vardą ir pavardę;
@@ -13,6 +15,15 @@ struct Studentas {
         int egzaminas;
     };
 
+double Vidurkis(Studentas studentas) {
+    double suma = 0;
+    for (int i = 0; i < studentas.namuDarbai.size(); i++) {
+        suma += studentas.namuDarbai[i];
+    }
+    suma += studentas.egzaminas;
+    return  round(suma / (studentas.namuDarbai.size()+1) * 100.0) / 100.0;
+}
+
 int main() {
     Studentas studentas;
     cout << "Iveskite studento varda: ";
@@ -21,9 +32,7 @@ int main() {
     cout << "Iveskite studento pavarde: ";
     cin >> studentas.pavarde;
 
-    int ndSkaicius;
-    cout << "Kiek namu darbu pazymiu vesite? ";
-    cin >> ndSkaicius;
+    int ndSkaicius = 5;
 
     for (int i=0; i< ndSkaicius; i++) {
         int pazymys;
@@ -31,14 +40,11 @@ int main() {
         cin >> pazymys;
         studentas.namuDarbai.push_back(pazymys);
     }
+
+    cout << "Iveskite egzamino pazymi: ";
+    cin >> studentas.egzaminas;
     
-    cout << studentas.vardas << " " << studentas.pavarde << " ";
-
-    for (int i = 0; i < studentas.namuDarbai.size(); i++) {
-        cout << studentas.namuDarbai[i] << " ";
-    }
-
-    cout << studentas.egzaminas;
+    cout << studentas.vardas << " " << studentas.pavarde << " " << Vidurkis(studentas)<< endl;
 
     return 0;
 }
