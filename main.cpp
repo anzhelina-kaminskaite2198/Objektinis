@@ -22,17 +22,28 @@ double Vidurkis(Studentas studentas) {
     for (int i = 0; i < studentas.namuDarbai.size(); i++) {
         suma += studentas.namuDarbai[i];
     }
-    double ndVidurkis = suma / studentas.namuDarbai.size();
+    double ndVidurkis;
+    if (studentas.namuDarbai.size() == 0) {
+        ndVidurkis = 0;
+    } else {
+        ndVidurkis = suma / studentas.namuDarbai.size();
+    }
     double galutinis = (ndVidurkis * 0.4) + (studentas.egzaminas * 0.6);
     return  round(galutinis * 100.0) / 100.0;
 }
 
 int main() {
-    string a = "Taip";
-    while (a == "Taip") {
+    string a ; 
+    while (true) {
         cout << "Ar norite ivesti nauja studenta? (Taip/Ne) ";
         cin >> a;
-        if (a == "Taip") {
+        if (a != "Taip" && a != "taip" && a != "Ne" && a != "ne") {
+            cout << "Klaida: iveskite 'Taip' arba 'Ne'." << endl;
+            continue;
+        } else if (a == "Ne" || a == "ne") {
+            break;
+        } 
+        if (a == "Taip"|| a == "taip") {
             Studentas studentas;
 
             cout << "Studento vardas: ";
@@ -40,28 +51,68 @@ int main() {
 
             cout << "Studento pavarde: ";
             cin >> studentas.pavarde;
+            cin.ignore();
 
-            int ndSkaicius = 5;
+            string ivertinimas;
+            cout << "\nKad baigti namu darbu ivedima paskauskite ENTER 2 kartus\n ";
 
-            for (int i=0; i< ndSkaicius; i++) {
-                int pazymys;
-                cout << " Pazymys uz " << i+1 << "-uosius namu darbus? ";
-                cin >> pazymys;
-                studentas.namuDarbai.push_back(pazymys);
+            while (true) {
+                cout  << "Iveskite namu darbu pazymi:";
+                getline(cin, ivertinimas);
+
+                if ( ivertinimas.empty() ) {
+                    break;
+                }
+
+                try {
+                    double pazymys = stod(ivertinimas);
+
+                    if (stod(ivertinimas) < 0 || stod(ivertinimas) > 10) {
+                    cout << "Klaida: ivestas pazymys turi buti nuo 0 iki 10, bandykite dar karta." << endl;
+                    continue;
+                    }
+                    studentas.namuDarbai.push_back(pazymys);
+                } catch (const invalid_argument& e) {
+                    cout << "Klaida: ivestas ne skaicius, bandykite dar karta." << endl;
+                    }
             }
 
-            cout << "Egzamino pazymys: ";
-            cin >> studentas.egzaminas;
+            string exam;
+            
+           while (true) {
+                cout << "Egzamino pazymys: ";
+                getline(cin, exam);
+
+                if (exam.empty()) {
+                    exam = "0";
+                }
+
+                try {
+                    double egzoPazymys = stod(exam);
+
+                    if (egzoPazymys < 0 || egzoPazymys > 10) {
+                        cout << "Klaida: pazymys turi buti nuo 0 iki 10." << endl;
+                        continue;
+                    }
+
+                    studentas.egzaminas = egzoPazymys;
+                    break;
+                }
+                catch (const invalid_argument& e) {
+                    cout << "Klaida: ivestas ne skaicius. Bandykite dar karta." << endl;
+                }
+            }
 
             studentai.push_back(studentas);
         }
+    }
     
     for ( Studentas studentas : studentai) {
         cout << studentas.vardas << " " 
              << studentas.pavarde << " " 
              << fixed << setprecision(2) << Vidurkis(studentas) << endl;
     }
-    }
+    
 
     return 0;
 }
