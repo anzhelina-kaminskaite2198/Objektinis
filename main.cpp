@@ -3,6 +3,7 @@
 #include <string>
 #include <iomanip>
 #include <cmath>
+#include <algorithm>
 using namespace std;
 
 // string tipo: studento vardą ir pavardę;
@@ -30,6 +31,22 @@ double Vidurkis(Studentas studentas) {
     }
     double galutinis = (ndVidurkis * 0.4) + (studentas.egzaminas * 0.6);
     return  round(galutinis * 100.0) / 100.0;
+}
+
+double Mediana(Studentas studentas) {
+    vector<int> ndPazymiai = studentas.namuDarbai;
+    sort(ndPazymiai.begin(), ndPazymiai.end());
+    double mediana;
+    int n = ndPazymiai.size();
+    if (n == 0) {
+        mediana = 0;
+    } else if (n % 2 == 0) {
+        mediana = (ndPazymiai[n / 2 - 1] + ndPazymiai[n / 2]) / 2.0;
+    } else {
+        mediana = ndPazymiai[n / 2];
+    }
+    double galutinis = (mediana * 0.4) + (studentas.egzaminas * 0.6);
+    return round(galutinis * 100.0) / 100.0;
 }
 
 int main() {
@@ -106,13 +123,24 @@ int main() {
             studentai.push_back(studentas);
         }
     }
-    
-    for ( Studentas studentas : studentai) {
-        cout << studentas.vardas << " " 
-             << studentas.pavarde << " " 
-             << fixed << setprecision(2) << Vidurkis(studentas) << endl;
+    cout << "\nAr norite gauti galutini rezultata pagal vidurki (1) ar mediana(2)? (1/2) ";
+    int pasirinkimas;
+    cin >> pasirinkimas;
+    cin.ignore();
+
+    if (pasirinkimas == 2) {
+        for (Studentas studentas : studentai) {
+            cout << studentas.vardas << " " 
+                 << studentas.pavarde << " " 
+                 << fixed << setprecision(2) << Mediana(studentas) << endl;
+        }
+    } else {
+        for (Studentas studentas : studentai) {
+            cout << studentas.vardas << " " 
+                 << studentas.pavarde << " " 
+                 << fixed << setprecision(2) << Vidurkis(studentas) << endl;
+        }
     }
-    
 
     return 0;
 }
