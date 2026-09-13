@@ -61,9 +61,16 @@ int IvestiStudenta() {
     cin.ignore();
 
     int pasirinkimas_nd;
-    cout << "1  Ivesti namu darbu pazymius\n" 
-         << "2  Sugeneruoti namu daru pazymius\n";
-    cin >> pasirinkimas_nd;
+    while (true) {
+        cout << "1  Ivesti namu darbu pazymius\n" 
+            << "2  Sugeneruoti namu daru pazymius\n";
+        cin >> pasirinkimas_nd;
+        if (pasirinkimas_nd == 1 || pasirinkimas_nd == 2) {
+            break;
+        } else {
+            cout << "Klaida: netinkamas pasirinkimas.\n" << endl;
+        }
+    }
     cin.ignore();
 
     switch (pasirinkimas_nd) {
@@ -117,10 +124,18 @@ int IvestiStudenta() {
         }
     } 
 
+
     int pasirinkimas_egz;
-    cout << "1  Ivesti egzamino pazymi\n" 
-         << "2  Sugeneruoti egzamino pazymi\n";
-    cin >> pasirinkimas_egz;
+    while (true) {
+        cout << "1  Ivesti egzamino pazymi\n" 
+             << "2  Sugeneruoti egzamino pazymi\n";
+        cin >> pasirinkimas_egz;
+        if (pasirinkimas_egz == 1 || pasirinkimas_egz == 2) {
+            break;
+        } else {
+            cout << "\nKlaida: netinkamas pasirinkimas.\n" << endl;
+        }
+    }
     cin.ignore(); 
 
     switch (pasirinkimas_egz) {
@@ -187,7 +202,7 @@ int main() {
     int pasirinkimas;
     
     while (true) {
-        cout << "              MENIU\n"
+        cout << "\n              MENIU\n"
         << "-----------------------------------\n"
         << "1  Ivesti nauja studenta\n"
         << "2  Rodyti visus studentus\n"
@@ -211,7 +226,7 @@ int main() {
             }
             default:
                 cout << "Klaida: netinkamas pasirinkimas." << endl;
-                return 0;
+                continue;
         }
 
     }
