@@ -4,6 +4,9 @@
 #include <iomanip>
 #include <cmath>
 #include <algorithm>
+#include <cstdlib>
+#include <ctime>
+
 using namespace std;
 
 struct Studentas {
@@ -57,57 +60,103 @@ int IvestiStudenta() {
     cin >> studentas.pavarde;
     cin.ignore();
 
-    string ivertinimas;
-    cout << "\nKad baigti namu darbu ivedima paskauskite ENTER 2 kartus\n ";
+    int pasirinkimas_nd;
+    cout << "1  Ivesti namu darbu pazymius\n" 
+         << "2  Sugeneruoti namu daru pazymius\n";
+    cin >> pasirinkimas_nd;
 
-    while (true) {
+    switch (pasirinkimas_nd) {
+        case 1: {
 
-        cout  << "Iveskite namu darbu pazymi:";
-        getline(cin, ivertinimas);
+            string ivertinimas;
+            cout << "\nKad baigti namu darbu ivedima paskauskite ENTER 2 kartus\n ";
 
-        if ( ivertinimas.empty() ) {
+            while (true) {
+
+                cout  << "Iveskite namu darbu pazymi:";
+                getline(cin, ivertinimas);
+
+                if ( ivertinimas.empty() ) {
+                    break;
+                }
+
+                try {
+                    double pazymys = stod(ivertinimas);
+
+                    if (pazymys < 0 || pazymys > 10) {
+                    cout << "Klaida: ivestas pazymys turi buti nuo 0 iki 10, bandykite dar karta." << endl;
+                    continue;
+                    }
+                    studentas.namuDarbai.push_back(pazymys);
+
+                } catch (const invalid_argument& e) {
+                    cout << "Klaida: ivestas ne skaicius, bandykite dar karta." << endl;
+                    }
+            }
             break;
         }
-
-        try {
-            double pazymys = stod(ivertinimas);
-
-            if (pazymys < 0 || pazymys > 10) {
-            cout << "Klaida: ivestas pazymys turi buti nuo 0 iki 10, bandykite dar karta." << endl;
-            continue;
+        case 2: {
+            int ndSkaicius;
+            cout << "Iveskite kiek namu darbu pazymiu norite sugeneruoti:";
+            cin >> ndSkaicius;
+            for (int i=0; i < ndSkaicius; i++) {
+                double ndPazymys = rand() % 11;
+                studentas.namuDarbai.push_back(ndPazymys);
             }
-            studentas.namuDarbai.push_back(pazymys);
+            cout << "Sugeneruoti namu darbu pazymiai: [";
 
-        } catch (const invalid_argument& e) {
-            cout << "Klaida: ivestas ne skaicius, bandykite dar karta." << endl;
+            for (int i = 0; i < studentas.namuDarbai.size(); i++) {
+                cout << studentas.namuDarbai[i];
+                if (i < studentas.namuDarbai.size() - 1) {
+                    cout << ", ";
+                }
             }
-    }
+            cout << "]" << endl;
+            break;
+        }
+    } 
 
-    string exam;
+    int pasirinkimas_egz;
+    cout << "1  Ivesti egzamino pazymi\n" 
+         << "2  Sugeneruoti egzamino pazymi\n";
+    cin >> pasirinkimas_egz;
+
+    switch (pasirinkimas_egz) {
+        case 1: {
+            string exam;
     
-    while (true) {
-        cout << "Egzamino pazymys: ";
-        getline(cin, exam);
+            while (true) {
+                cout << "Egzamino pazymys: ";
+                getline(cin, exam);
 
-        if (exam.empty()) {
-            exam = "0";
-        }
+                if (exam.empty()) {
+                    exam = "0";
+                }
 
-        try {
-            double egzoPazymys = stod(exam);
+                try {
+                    double egzoPazymys = stod(exam);
 
-            if (egzoPazymys < 0 || egzoPazymys > 10) {
-                cout << "Klaida: pazymys turi buti nuo 0 iki 10." << endl;
-                continue;
+                    if (egzoPazymys < 0 || egzoPazymys > 10) {
+                        cout << "Klaida: pazymys turi buti nuo 0 iki 10." << endl;
+                        continue;
+                    }
+
+                    studentas.egzaminas = egzoPazymys;
+                    break;
+                } catch (const invalid_argument& e) {
+                    cout << "Klaida: ivestas ne skaicius. Bandykite dar karta." << endl;
+                    }
             }
-
-            studentas.egzaminas = egzoPazymys;
             break;
-        } catch (const invalid_argument& e) {
-            cout << "Klaida: ivestas ne skaicius. Bandykite dar karta." << endl;
-            }
+        }
+        case 2: {
+            double egzPazymys = rand() % 11;
+            studentas.egzaminas = egzPazymys;
+            cout << "Sugeneruotas egzamino pazymys: " << egzPazymys << endl;
+            break;
+        }
     }
-
+    
     studentai.push_back(studentas);
 
     return 0;
@@ -129,6 +178,7 @@ int ParodytiStudentus() {
 
     return 0;
 }
+
 
 int main() {
 
