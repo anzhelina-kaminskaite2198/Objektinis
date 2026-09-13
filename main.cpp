@@ -64,6 +64,7 @@ int IvestiStudenta() {
     cout << "1  Ivesti namu darbu pazymius\n" 
          << "2  Sugeneruoti namu daru pazymius\n";
     cin >> pasirinkimas_nd;
+    cin.ignore();
 
     switch (pasirinkimas_nd) {
         case 1: {
@@ -120,6 +121,7 @@ int IvestiStudenta() {
     cout << "1  Ivesti egzamino pazymi\n" 
          << "2  Sugeneruoti egzamino pazymi\n";
     cin >> pasirinkimas_egz;
+    cin.ignore(); 
 
     switch (pasirinkimas_egz) {
         case 1: {
