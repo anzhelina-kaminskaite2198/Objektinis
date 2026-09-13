@@ -6,14 +6,11 @@
 #include <algorithm>
 using namespace std;
 
-// string tipo: studento vardą ir pavardę;
-// int tipo: namų darbų tarpiniai rezultatai ir egzamino rezultatą;
-
 struct Studentas {
         string vardas;
         string pavarde;
-        vector<int> namuDarbai;
-        int egzaminas;
+        vector<double> namuDarbai;
+        double egzaminas;
     };
 
 vector<Studentas> studentai;
@@ -34,7 +31,7 @@ double Vidurkis(Studentas studentas) {
 }
 
 double Mediana(Studentas studentas) {
-    vector<int> ndPazymiai = studentas.namuDarbai;
+    vector<double> ndPazymiai = studentas.namuDarbai;
     sort(ndPazymiai.begin(), ndPazymiai.end());
     double mediana;
     int n = ndPazymiai.size();
@@ -49,98 +46,122 @@ double Mediana(Studentas studentas) {
     return round(galutinis * 100.0) / 100.0;
 }
 
-int main() {
-    string a ; 
-    while (true) {
-        cout << "Ar norite ivesti nauja studenta? (Taip/Ne) ";
-        cin >> a;
-        if (a != "Taip" && a != "taip" && a != "Ne" && a != "ne") {
-            cout << "Klaida: iveskite 'Taip' arba 'Ne'." << endl;
-            continue;
-        } else if (a == "Ne" || a == "ne") {
-            break;
-        } 
-        if (a == "Taip"|| a == "taip") {
-            Studentas studentas;
+int IvestiStudenta() {
 
-            cout << "Studento vardas: ";
-            cin >> studentas.vardas;
+    Studentas studentas;
 
-            cout << "Studento pavarde: ";
-            cin >> studentas.pavarde;
-            cin.ignore();
+    cout << "Studento vardas: ";
+    cin >> studentas.vardas;
 
-            string ivertinimas;
-            cout << "\nKad baigti namu darbu ivedima paskauskite ENTER 2 kartus\n ";
-
-            while (true) {
-                cout  << "Iveskite namu darbu pazymi:";
-                getline(cin, ivertinimas);
-
-                if ( ivertinimas.empty() ) {
-                    break;
-                }
-
-                try {
-                    double pazymys = stod(ivertinimas);
-
-                    if (stod(ivertinimas) < 0 || stod(ivertinimas) > 10) {
-                    cout << "Klaida: ivestas pazymys turi buti nuo 0 iki 10, bandykite dar karta." << endl;
-                    continue;
-                    }
-                    studentas.namuDarbai.push_back(pazymys);
-                } catch (const invalid_argument& e) {
-                    cout << "Klaida: ivestas ne skaicius, bandykite dar karta." << endl;
-                    }
-            }
-
-            string exam;
-            
-           while (true) {
-                cout << "Egzamino pazymys: ";
-                getline(cin, exam);
-
-                if (exam.empty()) {
-                    exam = "0";
-                }
-
-                try {
-                    double egzoPazymys = stod(exam);
-
-                    if (egzoPazymys < 0 || egzoPazymys > 10) {
-                        cout << "Klaida: pazymys turi buti nuo 0 iki 10." << endl;
-                        continue;
-                    }
-
-                    studentas.egzaminas = egzoPazymys;
-                    break;
-                }
-                catch (const invalid_argument& e) {
-                    cout << "Klaida: ivestas ne skaicius. Bandykite dar karta." << endl;
-                }
-            }
-
-            studentai.push_back(studentas);
-        }
-    }
-    cout << "\nAr norite gauti galutini rezultata pagal vidurki (1) ar mediana(2)? (1/2) ";
-    int pasirinkimas;
-    cin >> pasirinkimas;
+    cout << "Studento pavarde: ";
+    cin >> studentas.pavarde;
     cin.ignore();
 
-    if (pasirinkimas == 2) {
-        for (Studentas studentas : studentai) {
-            cout << studentas.vardas << " " 
-                 << studentas.pavarde << " " 
-                 << fixed << setprecision(2) << Mediana(studentas) << endl;
+    string ivertinimas;
+    cout << "\nKad baigti namu darbu ivedima paskauskite ENTER 2 kartus\n ";
+
+    while (true) {
+
+        cout  << "Iveskite namu darbu pazymi:";
+        getline(cin, ivertinimas);
+
+        if ( ivertinimas.empty() ) {
+            break;
         }
-    } else {
-        for (Studentas studentas : studentai) {
-            cout << studentas.vardas << " " 
-                 << studentas.pavarde << " " 
-                 << fixed << setprecision(2) << Vidurkis(studentas) << endl;
+
+        try {
+            double pazymys = stod(ivertinimas);
+
+            if (pazymys < 0 || pazymys > 10) {
+            cout << "Klaida: ivestas pazymys turi buti nuo 0 iki 10, bandykite dar karta." << endl;
+            continue;
+            }
+            studentas.namuDarbai.push_back(pazymys);
+
+        } catch (const invalid_argument& e) {
+            cout << "Klaida: ivestas ne skaicius, bandykite dar karta." << endl;
+            }
+    }
+
+    string exam;
+    
+    while (true) {
+        cout << "Egzamino pazymys: ";
+        getline(cin, exam);
+
+        if (exam.empty()) {
+            exam = "0";
         }
+
+        try {
+            double egzoPazymys = stod(exam);
+
+            if (egzoPazymys < 0 || egzoPazymys > 10) {
+                cout << "Klaida: pazymys turi buti nuo 0 iki 10." << endl;
+                continue;
+            }
+
+            studentas.egzaminas = egzoPazymys;
+            break;
+        } catch (const invalid_argument& e) {
+            cout << "Klaida: ivestas ne skaicius. Bandykite dar karta." << endl;
+            }
+    }
+
+    studentai.push_back(studentas);
+
+    return 0;
+}
+
+int ParodytiStudentus() {
+    cout << "Vardas" << setw(15) 
+         << "Pavarde" << setw(20) 
+         << "Galutinis (vid.)" << setw(20) 
+         << "Galutinis (med.)" << endl
+         << "---------------------------------------------------------------" << endl;
+
+    for (Studentas studentas : studentai) {
+        cout << studentas.vardas << setw(15) 
+             << studentas.pavarde << setw(20) 
+             << fixed << setprecision(2) << Mediana(studentas) << setw(20) 
+             << fixed << setprecision(2) << Vidurkis(studentas) << endl;
     }
 
     return 0;
+}
+
+int main() {
+
+    int pasirinkimas;
+    
+    while (true) {
+        cout << "              MENIU\n"
+        << "-----------------------------------\n"
+        << "1  Ivesti nauja studenta\n"
+        << "2  Rodyti visus studentus\n"
+        << "3  Iseiti\n\n"
+        << "Pasirinkite veiksma:";
+    
+        cin >> pasirinkimas;
+        switch (pasirinkimas) {
+        
+            case 1: {
+                IvestiStudenta();
+                continue;
+            }
+
+            case 2: {
+                ParodytiStudentus();
+                continue;
+            }
+            case 3:{
+                return 0;;
+            }
+            default:
+                cout << "Klaida: netinkamas pasirinkimas." << endl;
+                return 0;
+        }
+
+    }
+        return 0;
 }
