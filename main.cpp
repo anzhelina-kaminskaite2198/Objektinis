@@ -180,17 +180,19 @@ int IvestiStudenta() {
 }
 
 int ParodytiStudentus() {
-    cout << "Vardas" << setw(15) 
-         << "Pavarde" << setw(20) 
-         << "Galutinis (vid.)" << setw(20) 
-         << "Galutinis (med.)" << endl
+    cout << left
+         << setw(15) << "Vardas" 
+         << setw(20) << "Pavarde"
+         << setw(20) << "Galutinis (vid.)"
+         << setw(20) << "Galutinis (med.)" << endl
          << "---------------------------------------------------------------" << endl;
 
     for (Studentas studentas : studentai) {
-        cout << studentas.vardas << setw(15) 
-             << studentas.pavarde << setw(20) 
-             << fixed << setprecision(2) << Mediana(studentas) << setw(20) 
-             << fixed << setprecision(2) << Vidurkis(studentas) << endl;
+        cout << left 
+             << setw(15) << studentas.vardas 
+             << setw(20) << studentas.pavarde 
+             << setw(20) << fixed << setprecision(2) << Mediana(studentas) 
+             << setw(20) << fixed << setprecision(2) << Vidurkis(studentas) << endl;
     }
 
     return 0;
