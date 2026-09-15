@@ -15,9 +15,15 @@ struct Studentas {
         string pavarde;
         vector<double> namuDarbai;
         double egzaminas;
-    };
-
+};
 vector<Studentas> studentai;
+
+struct NeteisingiDuomenys {
+    string vardas;
+    string pavarde;
+};
+
+vector<NeteisingiDuomenys> neteisingi;
 
 double Vidurkis(Studentas studentas) {
     double suma = 0;
@@ -181,26 +187,68 @@ int IvestiStudenta() {
 }
 
 int ParodytiStudentus() {
-    cout << left
+    sort(studentai.begin(), studentai.end(), [](Studentas a, Studentas b){
+         return a.vardas < b.vardas;});
+    cout << "\n\n Is viso sarase dabar yra " << studentai.size() <<" studentu\n";
+    
+    if (studentai.size() > 100) {
+        cout << "\nKadangi studentu skaicius yra per didelis as parodysiu tik pirmus ir paskurinius 20 studentu\n\n";
+        cout << left
          << setw(15) << "Vardas" 
          << setw(20) << "Pavarde"
          << setw(20) << "Galutinis (vid.)"
          << setw(20) << "Galutinis (med.)" << endl
-         << "---------------------------------------------------------------" << endl;
+         << "-----------------------------------------------------------------------" << endl;
+        for (int i = 0; i < 20; i++){
+            Studentas studentas = studentai[i];
+            cout << left 
+             << setw(15) << studentas.vardas 
+             << setw(20) << studentas.pavarde 
+             << setw(20) << fixed << setprecision(2) << Vidurkis(studentas)
+             << setw(20) << fixed << setprecision(2) << Mediana(studentas)  << endl;
+        }
+        cout << left 
+             << setw(15) << "..." 
+             << setw(20) << "..." 
+             << setw(20) << "..."
+             << setw(20) << "..." << endl ;
+        
+        for (int i = studentai.size()-20; i < studentai.size(); i++){
+            Studentas studentas = studentai[i];
+            cout << left 
+             << setw(15) << studentas.vardas 
+             << setw(20) << studentas.pavarde 
+             << setw(20) << fixed << setprecision(2) << Vidurkis(studentas)
+             << setw(20) << fixed << setprecision(2) << Mediana(studentas)  << endl;
+        }
+    } else {
+        cout << left
+         << setw(15) << "Vardas" 
+         << setw(20) << "Pavarde"
+         << setw(20) << "Galutinis (vid.)"
+         << setw(20) << "Galutinis (med.)" << endl
+         << "-----------------------------------------------------------------------" << endl;
 
-    for (Studentas studentas : studentai) {
+        for (Studentas studentas : studentai) {
         cout << left 
              << setw(15) << studentas.vardas 
              << setw(20) << studentas.pavarde 
-             << setw(20) << fixed << setprecision(2) << Mediana(studentas) 
-             << setw(20) << fixed << setprecision(2) << Vidurkis(studentas) << endl;
+             << setw(20) << fixed << setprecision(2) << Vidurkis(studentas)
+             << setw(20) << fixed << setprecision(2) << Mediana(studentas)  << endl;
     }
+    }
+
+    
 
     return 0;
 }
 
 int SkaitytiIsFailo() {
-    ifstream failas ("kursiokai.txt");
+    string file;
+    cout << "Is kokio failo noretumet nuskaityti studentu duomenis?\n"
+         << "pvz: kursiokai.txt" << endl;
+    cin >> file;
+    ifstream failas (file);
 
     if (!failas) {
         cout << "Nepavyko atidaryti failo." << endl;
@@ -217,18 +265,31 @@ int SkaitytiIsFailo() {
         ss >> studentas.pavarde;
 
         string strPazymys;
-        ss >> strPazymys;
-        try
-        {
-            double pazymys = stod(strPazymys);
+        bool neteisingasPazymys = false;
 
-            if ( pazymys >= 0 && pazymys <= 10) {
-                studentas.namuDarbai.push_back(pazymys);
-            } 
+        while (ss >> strPazymys) {
+            try
+            {
+                double pazymys = stod(strPazymys);
+
+                if ( pazymys >= 0 && pazymys <= 10) {
+                    studentas.namuDarbai.push_back(pazymys);
+                } else {
+                    neteisingasPazymys = true; 
+                    break;
+                }
+            }
+            catch(const invalid_argument& e){
+                neteisingasPazymys = true;
+            }
         }
-        catch(const invalid_argument& e){
+        if (neteisingasPazymys) {
+            NeteisingiDuomenys blogasStudentas;
+            blogasStudentas.vardas = studentas.vardas;
+            blogasStudentas.pavarde = studentas.pavarde;
+            neteisingi.push_back(blogasStudentas);
+            continue;
         }
-        
         studentas.egzaminas = studentas.namuDarbai.back();
         studentas.namuDarbai.pop_back();
 
@@ -236,6 +297,7 @@ int SkaitytiIsFailo() {
     }
     
     failas.close();
+    cout << "Failas sekmingai nuskaitytas!" << endl;
     return 0;
 }
 
@@ -271,11 +333,16 @@ int main() {
             }
             case 2: {
                 SkaitytiIsFailo();
-                cout << "Failas sekmingai nuskaitytas!" << endl;
                 continue;
             }
             case 3: {
                 ParodytiStudentus();
+                if (neteisingi.size() > 0) {
+                    cout << "\n\nDel duomenu ivedimo klaidos i sarasa nebuvo ivesti sie studentai:\n";
+                    for (NeteisingiDuomenys studentas: neteisingi){
+                        cout << studentas.vardas << " " << studentas.pavarde << endl;
+                    }
+                }
                 continue;
             }
             case 4:{

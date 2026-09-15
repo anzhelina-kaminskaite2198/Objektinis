@@ -1,5 +1,7 @@
 Vardas                   Pavarde                    ND1       ND2       ND3       ND4       ND5           Egz.
-Anzhelina                Kaminskaite                 8         9         7         3         3             10  
+Anzhelina                Kaminskaite                 8         9         7         3         3             10 
+Random                   Zmogus                      17         9         7         3         3             10  
 Kasijus                  Viteika                     7         6        10         5         8              9
+Vardenis                 Pavardenis                  17         s        10         6         4              3
 Neitas                   Skersys                     10       10        9          1         0              8
 Jokubas                  Jurgaitis                   8         7        10         6         4              7
