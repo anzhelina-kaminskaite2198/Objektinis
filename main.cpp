@@ -5,7 +5,8 @@
 #include <cmath>
 #include <algorithm>
 #include <cstdlib>
-#include <ctime>
+#include <fstream>
+#include <sstream>
 
 using namespace std;
 
@@ -198,6 +199,45 @@ int ParodytiStudentus() {
     return 0;
 }
 
+int SkaitytiIsFailo() {
+    ifstream failas ("kursiokai.txt");
+
+    if (!failas) {
+        cout << "Nepavyko atidaryti failo." << endl;
+        return 0;
+    }
+
+    string eilute;
+    getline(failas, eilute);
+
+    while (getline(failas, eilute)) {
+        stringstream ss(eilute);
+        Studentas studentas;
+        ss >> studentas.vardas;
+        ss >> studentas.pavarde;
+
+        string strPazymys;
+        ss >> strPazymys;
+        try
+        {
+            double pazymys = stod(strPazymys);
+
+            if ( pazymys >= 0 && pazymys <= 10) {
+                studentas.namuDarbai.push_back(pazymys);
+            } 
+        }
+        catch(const invalid_argument& e){
+        }
+        
+        studentas.egzaminas = studentas.namuDarbai.back();
+        studentas.namuDarbai.pop_back();
+
+        studentai.push_back(studentas);
+    }
+    
+    failas.close();
+    return 0;
+}
 
 int main() {
 
@@ -207,27 +247,42 @@ int main() {
         cout << "\n              MENIU\n"
         << "-----------------------------------\n"
         << "1  Ivesti nauja studenta\n"
-        << "2  Rodyti visus studentus\n"
-        << "3  Iseiti\n\n"
+        << "2  Nuskaityti duomenis is failo\n"
+        << "3  Rodyti visus studentus\n"
+        << "4  Iseiti\n\n"
         << "Pasirinkite veiksma:";
     
         cin >> pasirinkimas;
+        
+
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(100000000, '\n');
+            cout << "\n\nKlaida: netinkamas pasirinkimas." << endl;
+            continue;
+        }
+        
+
         switch (pasirinkimas) {
         
             case 1: {
                 IvestiStudenta();
                 continue;
             }
-
             case 2: {
+                SkaitytiIsFailo();
+                cout << "Failas sekmingai nuskaitytas!" << endl;
+                continue;
+            }
+            case 3: {
                 ParodytiStudentus();
                 continue;
             }
-            case 3:{
+            case 4:{
                 return 0;;
             }
             default:
-                cout << "Klaida: netinkamas pasirinkimas." << endl;
+                cout << "\n\nKlaida: netinkamas pasirinkimas." << endl;
                 continue;
         }
 
