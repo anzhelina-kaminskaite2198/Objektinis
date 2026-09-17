@@ -22,7 +22,6 @@ struct NeteisingiDuomenys {
     string vardas;
     string pavarde;
 };
-
 vector<NeteisingiDuomenys> neteisingi;
 
 double Vidurkis(Studentas studentas) {
@@ -72,11 +71,20 @@ int IvestiStudenta() {
         cout << "1  Ivesti namu darbu pazymius\n" 
             << "2  Sugeneruoti namu daru pazymius\n";
         cin >> pasirinkimas_nd;
-        if (pasirinkimas_nd == 1 || pasirinkimas_nd == 2) {
+
+        if (cin.fail()) {
+                        cin.clear();
+                        cin.ignore(100000000, '\n');
+                        cout << "\n\n\033[31mKlaida: netinkamas pasirinkimas.\033[0m" << endl;
+                        continue;
+                    }
+
+        else if (pasirinkimas_nd == 1 || pasirinkimas_nd == 2) {
             break;
         } else {
-            cout << "Klaida: netinkamas pasirinkimas.\n" << endl;
+            cout << "\033[31mKlaida: netinkamas pasirinkimas.\033[0m\n" << endl;
         }
+        
     }
     cin.ignore();
 
@@ -99,21 +107,32 @@ int IvestiStudenta() {
                     double pazymys = stod(ivertinimas);
 
                     if (pazymys < 0 || pazymys > 10) {
-                    cout << "Klaida: ivestas pazymys turi buti nuo 0 iki 10, bandykite dar karta." << endl;
+                    cout << "\033[31mKlaida: ivestas pazymys turi buti nuo 0 iki 10, bandykite dar karta.\033[0m" << endl;
                     continue;
                     }
                     studentas.namuDarbai.push_back(pazymys);
 
                 } catch (const invalid_argument& e) {
-                    cout << "Klaida: ivestas ne skaicius, bandykite dar karta." << endl;
+                    cout << "\033[31mKlaida: ivestas ne skaicius, bandykite dar karta.\033[0m" << endl;
                     }
             }
             break;
         }
         case 2: {
             int ndSkaicius;
-            cout << "Iveskite kiek namu darbu pazymiu norite sugeneruoti:";
-            cin >> ndSkaicius;
+            while (true){
+                cout << "Iveskite kiek namu darbu pazymiu norite sugeneruoti:";
+                cin >> ndSkaicius;
+
+                if (cin.fail()) {
+                    cin.clear();
+                    cin.ignore(100000000, '\n');
+                    cout << "\n\n\033[31mKlaida: netinkamas pasirinkimas.\033[0m" << endl;
+                    continue;
+                }else {
+                    break;
+                }
+            }
             for (int i=0; i < ndSkaicius; i++) {
                 double ndPazymys = rand() % 11;
                 studentas.namuDarbai.push_back(ndPazymys);
@@ -137,10 +156,17 @@ int IvestiStudenta() {
         cout << "1  Ivesti egzamino pazymi\n" 
              << "2  Sugeneruoti egzamino pazymi\n";
         cin >> pasirinkimas_egz;
-        if (pasirinkimas_egz == 1 || pasirinkimas_egz == 2) {
+
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(100000000, '\n');
+            cout << "\n\n\033[31mKlaida: netinkamas pasirinkimas.\033[0m" << endl;
+            continue;
+        }
+        else if (pasirinkimas_egz == 1 || pasirinkimas_egz == 2) {
             break;
         } else {
-            cout << "\nKlaida: netinkamas pasirinkimas.\n" << endl;
+            cout << "\n\033[31mKlaida: netinkamas pasirinkimas.\033[0m\n" << endl;
         }
     }
     cin.ignore(); 
@@ -161,14 +187,14 @@ int IvestiStudenta() {
                     double egzoPazymys = stod(exam);
 
                     if (egzoPazymys < 0 || egzoPazymys > 10) {
-                        cout << "Klaida: pazymys turi buti nuo 0 iki 10." << endl;
+                        cout << "\033[31mKlaida: pazymys turi buti nuo 0 iki 10.\033[0m" << endl;
                         continue;
                     }
 
                     studentas.egzaminas = egzoPazymys;
                     break;
                 } catch (const invalid_argument& e) {
-                    cout << "Klaida: ivestas ne skaicius. Bandykite dar karta." << endl;
+                    cout << "\033[31mKlaida: ivestas ne skaicius. Bandykite dar karta.\033[0m" << endl;
                     }
             }
             break;
@@ -186,60 +212,63 @@ int IvestiStudenta() {
     return 0;
 }
 
-int ParodytiStudentus() {
+int RodytiDaliStudentu() {
+
     sort(studentai.begin(), studentai.end(), [](Studentas a, Studentas b){
          return a.vardas < b.vardas;});
-    cout << "\n\n Is viso sarase dabar yra " << studentai.size() <<" studentu\n";
-    
-    if (studentai.size() > 100) {
-        cout << "\nKadangi studentu skaicius yra per didelis as parodysiu tik pirmus ir paskurinius 20 studentu\n\n";
-        cout << left
-         << setw(15) << "Vardas" 
-         << setw(20) << "Pavarde"
-         << setw(20) << "Galutinis (vid.)"
-         << setw(20) << "Galutinis (med.)" << endl
-         << "-----------------------------------------------------------------------" << endl;
-        for (int i = 0; i < 20; i++){
-            Studentas studentas = studentai[i];
-            cout << left 
-             << setw(15) << studentas.vardas 
-             << setw(20) << studentas.pavarde 
-             << setw(20) << fixed << setprecision(2) << Vidurkis(studentas)
-             << setw(20) << fixed << setprecision(2) << Mediana(studentas)  << endl;
-        }
-        cout << left 
-             << setw(15) << "..." 
-             << setw(20) << "..." 
-             << setw(20) << "..."
-             << setw(20) << "..." << endl ;
-        
-        for (int i = studentai.size()-20; i < studentai.size(); i++){
-            Studentas studentas = studentai[i];
-            cout << left 
-             << setw(15) << studentas.vardas 
-             << setw(20) << studentas.pavarde 
-             << setw(20) << fixed << setprecision(2) << Vidurkis(studentas)
-             << setw(20) << fixed << setprecision(2) << Mediana(studentas)  << endl;
-        }
-    } else {
-        cout << left
+         
+    cout << left
          << setw(15) << "Vardas" 
          << setw(20) << "Pavarde"
          << setw(20) << "Galutinis (vid.)"
          << setw(20) << "Galutinis (med.)" << endl
          << "-----------------------------------------------------------------------" << endl;
 
-        for (Studentas studentas : studentai) {
+    for (int i = 0; i < 20; i++){
+        Studentas studentas = studentai[i];
         cout << left 
-             << setw(15) << studentas.vardas 
-             << setw(20) << studentas.pavarde 
-             << setw(20) << fixed << setprecision(2) << Vidurkis(studentas)
-             << setw(20) << fixed << setprecision(2) << Mediana(studentas)  << endl;
-    }
+            << setw(15) << studentas.vardas 
+            << setw(20) << studentas.pavarde 
+            << setw(20) << fixed << setprecision(2) << Vidurkis(studentas)
+            << setw(20) << fixed << setprecision(2) << Mediana(studentas)  << endl;
     }
 
+    cout << left 
+            << setw(15) << "..." 
+            << setw(20) << "..." 
+            << setw(20) << "..."
+            << setw(20) << "..." << endl ;
     
+    for (int i = studentai.size()-20; i < studentai.size(); i++){
+        Studentas studentas = studentai[i];
+        cout << left 
+            << setw(15) << studentas.vardas 
+            << setw(20) << studentas.pavarde 
+            << setw(20) << fixed << setprecision(2) << Vidurkis(studentas)
+            << setw(20) << fixed << setprecision(2) << Mediana(studentas)  << endl;
+    }
+    return 0;
+}
 
+int RodytiVisusStudentus() {
+
+    sort(studentai.begin(), studentai.end(), [](Studentas a, Studentas b){
+         return a.vardas < b.vardas;});
+    
+    cout << left
+        << setw(15) << "Vardas" 
+        << setw(20) << "Pavarde"
+        << setw(20) << "Galutinis (vid.)"
+        << setw(20) << "Galutinis (med.)" << endl
+        << "-----------------------------------------------------------------------" << endl;
+
+    for (Studentas studentas : studentai) {
+        cout << left 
+            << setw(15) << studentas.vardas 
+            << setw(20) << studentas.pavarde 
+            << setw(20) << fixed << setprecision(2) << Vidurkis(studentas)
+            << setw(20) << fixed << setprecision(2) << Mediana(studentas)  << endl;
+    }
     return 0;
 }
 
@@ -251,7 +280,7 @@ int SkaitytiIsFailo() {
     ifstream failas (file);
 
     if (!failas) {
-        cout << "Nepavyko atidaryti failo." << endl;
+        cout << "\033[31mNepavyko atidaryti failo.\033[0m" << endl;
         return 0;
     }
 
@@ -297,7 +326,7 @@ int SkaitytiIsFailo() {
     }
     
     failas.close();
-    cout << "Failas sekmingai nuskaitytas!" << endl;
+    cout << "\033[32mFailas sekmingai nuskaitytas!\033[0m" << endl;
     return 0;
 }
 
@@ -310,21 +339,19 @@ int main() {
         << "-----------------------------------\n"
         << "1  Ivesti nauja studenta\n"
         << "2  Nuskaityti duomenis is failo\n"
-        << "3  Rodyti visus studentus\n"
+        << "3  Rodyti studentus\n"
         << "4  Iseiti\n\n"
         << "Pasirinkite veiksma:";
     
         cin >> pasirinkimas;
         
-
         if (cin.fail()) {
             cin.clear();
             cin.ignore(100000000, '\n');
-            cout << "\n\nKlaida: netinkamas pasirinkimas." << endl;
+            cout << "\n\n\033[31mKlaida: netinkamas pasirinkimas.\033[0m" << endl;
             continue;
         }
         
-
         switch (pasirinkimas) {
         
             case 1: {
@@ -336,20 +363,60 @@ int main() {
                 continue;
             }
             case 3: {
-                ParodytiStudentus();
+                if (studentai.size() > 40){
+                    int choice;
+                    int i = 0;
+                    while (i == 0){
+                    
+                        cout << "Sarase dabar yra " << studentai.size() << " studentu. Ar norite: \n"
+                            << "1  Parodyti visus studentus\n"
+                            << "2  Parodyti dali studentu" << endl;
+                        
+                        cin >> choice;
+                        
+                        if (cin.fail()) {
+                            cin.clear();
+                            cin.ignore(100000000, '\n');
+                            cout << "\n\n\033[31mKlaida: netinkamas pasirinkimas.\033[0m" << endl;
+                            continue;
+                        } 
+                    
+                        switch (choice) {
+
+                            case 1: {
+                                RodytiVisusStudentus();
+                                i = 1;
+                                continue;
+                            }
+                            case 2: {
+                                RodytiDaliStudentu();
+                                i = 1;
+                                continue;
+                            }
+                            default:
+                                cout << "\n\n\033[31mKlaida: netinkamas pasirinkimas.\033[0m" << endl;
+                                continue;
+                        }
+                    }
+                    
+                } else {
+                     RodytiVisusStudentus();
+                }
+
                 if (neteisingi.size() > 0) {
                     cout << "\n\nDel duomenu ivedimo klaidos i sarasa nebuvo ivesti sie studentai:\n";
                     for (NeteisingiDuomenys studentas: neteisingi){
                         cout << studentas.vardas << " " << studentas.pavarde << endl;
                     }
                 }
+                
                 continue;
             }
             case 4:{
                 return 0;;
             }
             default:
-                cout << "\n\nKlaida: netinkamas pasirinkimas." << endl;
+                cout << "\n\n\033[31mKlaida: netinkamas pasirinkimas.\033[0m" << endl;
                 continue;
         }
 
