@@ -1,17 +1,7 @@
-#include <iostream>
-#include <vector>
-#include <string>
-#include <iomanip>
-#include <cmath>
-#include <algorithm>
-#include <cstdlib>
-#include <fstream>
-#include <sstream>
-
 #include "Strukturos.h"
 #include "StudentuFunkcijos.h"
 
-
+#include <iostream>
 using namespace std;
 
 
