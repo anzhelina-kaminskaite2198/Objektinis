@@ -6,15 +6,17 @@
 using namespace std;
 
 struct Studentas {
-        string vardas;
-        string pavarde;
-        vector<double> namuDarbai;
-        double egzaminas;
+    string vardas;
+    string pavarde;
+    vector<double> namuDarbai;
+    double egzaminas;
 };
 
 struct NeteisingiDuomenys {
     string vardas;
     string pavarde;
 };
+
+
 
 #endif

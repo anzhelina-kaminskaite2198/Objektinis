@@ -21,8 +21,11 @@ random_device rd;
 mt19937 gen(rd());
 uniform_real_distribution<double>dist(0.0, 10.0);
 
-vector<Studentas> studentai;
+vector<Studentas> vargseliai;
+vector<Studentas> kietuoliai;
 vector<NeteisingiDuomenys> neteisingi;
+
+
 
 int IvedimoKlaidos (int kintamasis, int pasirinkimuSk) {
     if (cin.fail()) {
@@ -201,11 +204,17 @@ int IvestiStudenta() {
         }
     }
     
-    studentai.push_back(studentas);
+    if (Vidurkis(studentas) >= 5) {
+        kietuoliai.push_back(studentas);
+    } else {
+        vargseliai.push_back(studentas);
+    }
+    
 
     return 0;
 }
 
+/*
 int RodytiDaliStudentu() {
 
     sort(studentai.begin(), studentai.end(), [](Studentas a, Studentas b){
@@ -243,28 +252,53 @@ int RodytiDaliStudentu() {
     }
     return 0;
 }
+*/
 
-int RodytiVisusStudentus() {
+int IrasytiStudentus() {
 
-    sort(studentai.begin(), studentai.end(), [](Studentas a, Studentas b){
+    sort(vargseliai.begin(), vargseliai.end(), [](Studentas a, Studentas b){
          return a.vardas < b.vardas;});
+    sort(kietuoliai.begin(), kietuoliai.end(), [](Studentas a, Studentas b){
+         return a.vardas < b.vardas;});
+        
+    ofstream varg ("vargseliai.txt");
+    ofstream kiet ("kietuoliai.txt");
     
-    cout << left
+    varg << left
+            << setw(15) << "Vardas" 
+            << setw(20) << "Pavarde"
+            << setw(20) << "Galutinis (vid.)"
+            << setw(20) << "Galutinis (med.)" << endl
+            << "-----------------------------------------------------------------------" << endl;
+
+        
+    kiet << left
         << setw(15) << "Vardas" 
         << setw(20) << "Pavarde"
         << setw(20) << "Galutinis (vid.)"
         << setw(20) << "Galutinis (med.)" << endl
         << "-----------------------------------------------------------------------" << endl;
-
-    for (Studentas studentas : studentai) {
-        cout << left 
+        
+    for (Studentas studentas : vargseliai) {
+        varg << left 
             << setw(15) << studentas.vardas 
             << setw(20) << studentas.pavarde 
             << setw(20) << fixed << setprecision(2) << Vidurkis(studentas)
             << setw(20) << fixed << setprecision(2) << Mediana(studentas)  << endl;
     }
+
+    for (Studentas studentas : kietuoliai) {
+        kiet << left 
+            << setw(15) << studentas.vardas 
+            << setw(20) << studentas.pavarde 
+            << setw(20) << fixed << setprecision(2) << Vidurkis(studentas)
+            << setw(20) << fixed << setprecision(2) << Mediana(studentas)  << endl;
+    }
+    varg.close();
+    kiet.close();
     return 0;
 }
+
 
 int SkaitytiIsFailo() {
     string file;
@@ -316,7 +350,11 @@ int SkaitytiIsFailo() {
         studentas.egzaminas = studentas.namuDarbai.back();
         studentas.namuDarbai.pop_back();
 
-        studentai.push_back(studentas);
+        if (Vidurkis(studentas) >= 5) {
+            kietuoliai.push_back(studentas);
+        } else {
+            vargseliai.push_back(studentas);
+        }
     }
     
     failas.close();
@@ -324,9 +362,5 @@ int SkaitytiIsFailo() {
     return 0;
 }
 
-int SukurtiFaila(string pavadinimas){
-    ofstream failas (pavadinimas);
-    
-}
 
 #endif

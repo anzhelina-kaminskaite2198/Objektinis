@@ -2,10 +2,33 @@
 #include "StudentuFunkcijos.h"
 
 #include <iostream>
+#include <iomanip>
+#include <fstream>
 using namespace std;
 
 
 int main() {
+
+    ofstream varg ("vargseliai.txt");
+    ofstream kiet ("kietuoliai.txt");
+
+    varg << left
+            << setw(15) << "Vardas" 
+            << setw(20) << "Pavarde"
+            << setw(20) << "Galutinis (vid.)"
+            << setw(20) << "Galutinis (med.)" << endl
+            << "-----------------------------------------------------------------------" << endl;
+
+        
+        kiet << left
+            << setw(15) << "Vardas" 
+            << setw(20) << "Pavarde"
+            << setw(20) << "Galutinis (vid.)"
+            << setw(20) << "Galutinis (med.)" << endl
+            << "-----------------------------------------------------------------------" << endl;
+
+    varg.close();
+    kiet.close();
 
     int pasirinkimas;
     
@@ -38,46 +61,10 @@ int main() {
                 continue;
             }
             case 3: {
-                if (studentai.size() > 40){
-                    int choice;
-                    int i = 0;
-                    while (i == 0){
-                    
-                        cout << "Sarase dabar yra " << studentai.size() << " studentu. Ar norite: \n"
-                            << "1  Parodyti visus studentus\n"
-                            << "2  Parodyti dali studentu" << endl;
-                        
-                        cin >> choice;
-                        
-                        if (cin.fail()) {
-                            cin.clear();
-                            cin.ignore(100000000, '\n');
-                            cout << "\n\n\033[31mKlaida: netinkamas pasirinkimas.\033[0m" << endl;
-                            continue;
-                        } 
-                    
-                        switch (choice) {
-
-                            case 1: {
-                                RodytiVisusStudentus();
-                                i = 1;
-                                continue;
-                            }
-                            case 2: {
-                                RodytiDaliStudentu();
-                                i = 1;
-                                continue;
-                            }
-                            default:
-                                cout << "\n\n\033[31mKlaida: netinkamas pasirinkimas.\033[0m" << endl;
-                                continue;
-                        }
-                    }
-                    
-                } else {
-                     RodytiVisusStudentus();
+                
+                IrasytiStudentus();
                 }
-
+                    
                 if (neteisingi.size() > 0) {
                     cout << "\n\nDel duomenu ivedimo klaidos i sarasa nebuvo ivesti sie studentai:\n";
                     for (NeteisingiDuomenys studentas: neteisingi){
@@ -86,7 +73,7 @@ int main() {
                 }
                 
                 continue;
-            }
+            
             case 4:{
                 return 0;;
             }

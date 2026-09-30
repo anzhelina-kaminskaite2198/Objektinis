@@ -3,7 +3,8 @@
 
 using namespace std;
 
-extern vector<Studentas> studentai;
+extern vector<Studentas> vargseliai;
+extern vector<Studentas> kietuoliai;
 extern vector<NeteisingiDuomenys> neteisingi;
 
 int IvedimoKlaidos (int, int);
@@ -14,9 +15,7 @@ double Mediana(Studentas studentas);
 
 int IvestiStudenta();
 
-int RodytiDaliStudentu();
-
-int RodytiVisusStudentus();
+int IrasytiStudentus();
 
 int SkaitytiIsFailo();
 
