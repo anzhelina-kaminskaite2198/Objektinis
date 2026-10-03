@@ -10,6 +10,8 @@ struct Studentas {
     string pavarde;
     vector<double> namuDarbai;
     double egzaminas;
+    double galutinisVid;
+    double galutinisMed;
 };
 
 struct NeteisingiDuomenys {

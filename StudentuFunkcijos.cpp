@@ -1,5 +1,4 @@
-#ifndef STUDENTUFUNKCIJOS_H
-#define STUDENTUFUNKCIJOS_H
+
 
 #include "StudentuFunkcijos.h"
 #include "Strukturos.h"
@@ -14,6 +13,8 @@
 #include <sstream>
 #include <string>
 #include <random>
+#include <limits>
+#include <stdexcept>
 
 using namespace std;
 
@@ -24,14 +25,13 @@ static uniform_real_distribution<double>dist(0.0, 10.0);
 vector<NeteisingiDuomenys> neteisingi;
 
 
-
-int IvedimoKlaidos (int kintamasis, int pasirinkimuSk) {
+bool IvedimoKlaidos (int kintamasis, int pasirinkimuSk) {
     if (cin.fail()) {
-                        cin.clear();
-                        cin.ignore(100000000, '\n');
-                        cout << "\n\n\033[31mKlaida: netinkamas pasirinkimas.\033[0m" << endl;
-                        return false;
-                    }
+        cin.clear();
+        cin.ignore(100000000, '\n');
+        cout << "\n\n\033[31mKlaida: netinkamas pasirinkimas.\033[0m" << endl;
+        return false;
+    }
     else if (kintamasis >= 1 && kintamasis <= pasirinkimuSk) {
         return true;
     } else {
@@ -40,7 +40,20 @@ int IvedimoKlaidos (int kintamasis, int pasirinkimuSk) {
     }
 }
 
-double Vidurkis(Studentas studentas) {
+int PasirinktiRusiavimoParametra() {
+    int pasirinkimas;
+    while (true) {
+        cout << "\nPagal ka rusiuoti studentus?\n"
+             << "1  Pagal varda\n"
+             << "2  Pagal pavarde\n"
+             << "3  Pagal galutini bala\n";
+        cin >> pasirinkimas;
+        if (IvedimoKlaidos(pasirinkimas, 3)) { break; }
+    }
+    return pasirinkimas;
+}
+
+double Vidurkis(const Studentas& studentas) {
     double suma = 0;
     for (int i = 0; i < studentas.namuDarbai.size(); i++) {
         suma += studentas.namuDarbai[i];
@@ -55,7 +68,7 @@ double Vidurkis(Studentas studentas) {
     return  round(galutinis * 100.0) / 100.0;
 }
 
-double Mediana(Studentas studentas) {
+double Mediana(const Studentas& studentas) {
     vector<double> ndPazymiai = studentas.namuDarbai;
     sort(ndPazymiai.begin(), ndPazymiai.end());
     double mediana;
@@ -71,7 +84,7 @@ double Mediana(Studentas studentas) {
     return round(galutinis * 100.0) / 100.0;
 }
 
-int IvestiStudenta() {
+int IvestiStudenta(vector<Studentas>& studentai) {
 
     Studentas studentas;
 
@@ -85,7 +98,7 @@ int IvestiStudenta() {
     int pasirinkimas_nd;
     while (true) {
         cout << "1  Ivesti namu darbu pazymius\n" 
-            << "2  Sugeneruoti namu daru pazymius\n";
+             << "2  Sugeneruoti namu daru pazymius\n";
         cin >> pasirinkimas_nd;
 
         if (IvedimoKlaidos(pasirinkimas_nd, 2)) { break; }
@@ -134,10 +147,14 @@ int IvestiStudenta() {
                     cin.ignore(100000000, '\n');
                     cout << "\n\n\033[31mKlaida: netinkamas pasirinkimas.\033[0m" << endl;
                     continue;
-                }else {
+                }else if (ndSkaicius < 0) {
+                    cout << "\033[31mKlaida: skaicius negali buti neigiamas.\033[0m" << endl;
+                    continue;
+                } else {
                     break;
                 }
             }
+            
             for (int i=0; i < ndSkaicius; i++) {
                 double ndPazymys = dist(gen);
                 studentas.namuDarbai.push_back(ndPazymys);
@@ -202,113 +219,51 @@ int IvestiStudenta() {
         }
     }
     
-    if (Vidurkis(studentas) >= 5) {
-        kietuoliai.push_back(studentas);
-    } else {
-        vargseliai.push_back(studentas);
-    }
+    studentas.galutinisVid = Vidurkis(studentas);
+    studentas.galutinisMed = Mediana(studentas);
+    studentai.push_back(studentas);
+ 
+
     
 
     return 0;
 }
 
-/*
-int RodytiDaliStudentu() {
+double IrasytiStudentus(const vector<Studentas>& v, const string& failoVardas) {
+    Laikmatis t;
 
-    sort(studentai.begin(), studentai.end(), [](Studentas a, Studentas b){
-         return a.vardas < b.vardas;});
-         
-    cout << left
-         << setw(15) << "Vardas" 
-         << setw(20) << "Pavarde"
-         << setw(20) << "Galutinis (vid.)"
-         << setw(20) << "Galutinis (med.)" << endl
-         << "-----------------------------------------------------------------------" << endl;
-
-    for (int i = 0; i < 20; i++){
-        Studentas studentas = studentai[i];
-        cout << left 
-            << setw(15) << studentas.vardas 
-            << setw(20) << studentas.pavarde 
-            << setw(20) << fixed << setprecision(2) << Vidurkis(studentas)
-            << setw(20) << fixed << setprecision(2) << Mediana(studentas)  << endl;
-    }
-
-    cout << left 
-            << setw(15) << "..." 
-            << setw(20) << "..." 
-            << setw(20) << "..."
-            << setw(20) << "..." << endl ;
-    
-    for (int i = studentai.size()-20; i < studentai.size(); i++){
-        Studentas studentas = studentai[i];
-        cout << left 
-            << setw(15) << studentas.vardas 
-            << setw(20) << studentas.pavarde 
-            << setw(20) << fixed << setprecision(2) << Vidurkis(studentas)
-            << setw(20) << fixed << setprecision(2) << Mediana(studentas)  << endl;
-    }
-    return 0;
-}
-*/
-
-int IrasytiStudentus() {
-
-    sort(vargseliai.begin(), vargseliai.end(), [](Studentas a, Studentas b){
-         return a.vardas < b.vardas;});
-    sort(kietuoliai.begin(), kietuoliai.end(), [](Studentas a, Studentas b){
-         return a.vardas < b.vardas;});
-        
-    ofstream varg ("vargseliai.txt");
-    ofstream kiet ("kietuoliai.txt");
-    
-    varg << left
-            << setw(15) << "Vardas" 
+    ofstream failas (failoVardas);    
+    failas  << left
+            << setw(15) << "Vardas"
             << setw(20) << "Pavarde"
             << setw(20) << "Galutinis (vid.)"
-            << setw(20) << "Galutinis (med.)" << endl
-            << "-----------------------------------------------------------------------" << endl;
+            << setw(20) << "Galutinis (med.)" << '\n'
+            << "-----------------------------------------------------------------------" << '\n';
 
-        
-    kiet << left
-        << setw(15) << "Vardas" 
-        << setw(20) << "Pavarde"
-        << setw(20) << "Galutinis (vid.)"
-        << setw(20) << "Galutinis (med.)" << endl
-        << "-----------------------------------------------------------------------" << endl;
-        
-    for (Studentas studentas : vargseliai) {
-        varg << left 
-            << setw(15) << studentas.vardas 
-            << setw(20) << studentas.pavarde 
-            << setw(20) << fixed << setprecision(2) << Vidurkis(studentas)
-            << setw(20) << fixed << setprecision(2) << Mediana(studentas)  << endl;
+    failas << fixed << setprecision(2);
+    for (const auto& studentas : v) {
+        failas  << left 
+                << setw(15) << studentas.vardas 
+                << setw(20) << studentas.pavarde 
+                << setw(20) << studentas.galutinisVid
+                << setw(20) << studentas.galutinisMed << '\n';
     }
-
-    for (Studentas studentas : kietuoliai) {
-        kiet << left 
-            << setw(15) << studentas.vardas 
-            << setw(20) << studentas.pavarde 
-            << setw(20) << fixed << setprecision(2) << Vidurkis(studentas)
-            << setw(20) << fixed << setprecision(2) << Mediana(studentas)  << endl;
-    }
-    varg.close();
-    kiet.close();
-    return 0;
+    failas.close();
+    return t.praejo();
 }
 
-
-int SkaitytiIsFailo() {
-    string file;
-    cout << "Is kokio failo noretumet nuskaityti studentu duomenis?\n"
-         << "pvz: kursiokai.txt" << endl;
-    cin >> file;
-    ifstream failas (file);
+double SkaitytiIsFailo(const string& failoVardas, vector<Studentas>& studentai) {
+   
+    ifstream failas (failoVardas);
 
     if (!failas) {
         cout << "\033[31mNepavyko atidaryti failo.\033[0m" << endl;
-        return 0;
+        return -1;
     }
+
+    neteisingi.clear();
+    Laikmatis t;
+
 
     string eilute;
     getline(failas, eilute);
@@ -336,9 +291,10 @@ int SkaitytiIsFailo() {
             }
             catch(const invalid_argument& e){
                 neteisingasPazymys = true;
+                break;
             }
         }
-        if (neteisingasPazymys) {
+        if (neteisingasPazymys|| studentas.namuDarbai.empty()) {
             NeteisingiDuomenys blogasStudentas;
             blogasStudentas.vardas = studentas.vardas;
             blogasStudentas.pavarde = studentas.pavarde;
@@ -348,17 +304,162 @@ int SkaitytiIsFailo() {
         studentas.egzaminas = studentas.namuDarbai.back();
         studentas.namuDarbai.pop_back();
 
-        if (Vidurkis(studentas) >= 5) {
-            kietuoliai.push_back(studentas);
-        } else {
-            vargseliai.push_back(studentas);
-        }
+        studentas.galutinisVid = Vidurkis(studentas);
+        studentas.galutinisMed = Mediana(studentas);
+        studentai.push_back(move(studentas));
+
     }
     
     failas.close();
-    cout << "\033[32mFailas sekmingai nuskaitytas!\033[0m" << endl;
-    return 0;
+    return t.praejo();
 }
 
+double DalytiStudentus(vector<Studentas>& studentai, vector<Studentas>& vargseliai, vector<Studentas>& kietuoliai) {
+    Laikmatis t;
+ 
+    for (auto& s : studentai) {
+        if (s.galutinisVid < 5.0) {
+            vargseliai.push_back(move(s));
+        } else {
+            kietuoliai.push_back(move(s));
+        }
+    }
+    studentai.clear();
+    studentai.shrink_to_fit();
+ 
+    return t.praejo();
+}
 
-#endif
+double RusiuotiStudentus(vector<Studentas>& v, int pagal) {
+    Laikmatis t;
+ 
+    switch (pagal) {
+        case 1:
+            sort(v.begin(), v.end(), [](const Studentas& a, const Studentas& b) { return a.vardas < b.vardas; });
+            break;
+        case 2:
+            sort(v.begin(), v.end(), [](const Studentas& a, const Studentas& b) { return a.pavarde < b.pavarde; });
+            break;
+        case 3:
+            sort(v.begin(), v.end(), [](const Studentas& a, const Studentas& b) { return a.galutinisVid < b.galutinisVid; });
+            break;
+    }
+ 
+    return t.praejo();
+}
+
+void PaleistiTestus(int rusiavimoPasirinkimas) {
+    const int dydziai[] = {1000, 10000, 100000, 1000000, 10000000};
+ 
+    const int kartai = 3;
+    cout << fixed << setprecision(6);
+ 
+    for (int n : dydziai) {
+        string failas = "studentai" + to_string(n) + ".txt";
+        
+        vector<double> nuskLaikai;
+        vector<double> dalLaikai;
+        vector<double> rusLaikai;
+        vector<double> vargLaikai;
+        vector<double> kietLaikai;
+        vector<double> bendriLaikai;
+
+        for (int k = 0; k < kartai; k++) {
+            vector<Studentas> studentai;
+            vector<Studentas> vargseliai;
+            vector<Studentas> kietuoliai;
+
+            double tNusk = SkaitytiIsFailo(failas, studentai);
+            if (tNusk < 0) { break; }
+            double tDal = DalytiStudentus(studentai, vargseliai, kietuoliai);
+            double tRus = RusiuotiStudentus(vargseliai, rusiavimoPasirinkimas)
+                  + RusiuotiStudentus(kietuoliai, rusiavimoPasirinkimas);
+            double tVarg = IrasytiStudentus(vargseliai, "vargseliai" + to_string(n) + ".txt");
+            double tKiet = IrasytiStudentus(kietuoliai, "kietuoliai" + to_string(n) + ".txt");
+        
+            double tBendras = tNusk + tDal + tRus + tVarg + tKiet;
+
+            nuskLaikai.push_back(tNusk);
+            dalLaikai.push_back(tDal);
+            rusLaikai.push_back(tRus);
+            vargLaikai.push_back(tVarg);
+            kietLaikai.push_back(tKiet);
+            bendriLaikai.push_back(tBendras);
+
+            cout << "Failas: " << n << " studentu"
+                 << " | Testas " << k + 1
+                 << " | Laikas: " << tBendras << " s\n";
+        }
+        
+         if (bendriLaikai.empty()) {
+            cout << "Failas " << failas
+                 << " nerastas.\n\n";
+            continue;
+        }
+
+        auto VidurkisLaiku = [](const vector<double>& laikai) {
+            double suma = 0;
+
+            for (double laikas : laikai) {
+                suma += laikas;
+            }
+
+            return suma / laikai.size();
+        };
+        cout << "\n========== "
+             << n << " STUDENTU ==========\n";
+
+        cout << "Nuskaitymo laikai:\n";
+        for (double laikas : nuskLaikai)
+            cout << laikas << " s\n";
+
+        cout << "Vidurkis: "
+             << VidurkisLaiku(nuskLaikai)
+             << " s\n\n";
+
+
+        cout << "Dalijimo laikai:\n";
+        for (double laikas : dalLaikai)
+            cout << laikas << " s\n";
+
+        cout << "Vidurkis: "
+             << VidurkisLaiku(dalLaikai)
+             << " s\n\n";
+
+
+        cout << "Rusiuavimo laikai:\n";
+        for (double laikas : rusLaikai)
+            cout << laikas << " s\n";
+
+        cout << "Vidurkis: "
+             << VidurkisLaiku(rusLaikai)
+             << " s\n\n";
+
+        cout << "Vargsheliu irasymo laikai:\n";
+        for (double laikas : vargLaikai)
+            cout << laikas << " s\n";
+
+        cout << "Vidurkis: "
+             << VidurkisLaiku(vargLaikai)
+             << " s\n\n";
+
+
+        cout << "Kietuoliu irasymo laikai:\n";
+        for (double laikas : kietLaikai)
+            cout << laikas << " s\n";
+
+        cout << "Vidurkis: "
+             << VidurkisLaiku(kietLaikai)
+             << " s\n\n";
+
+
+        cout << "BENDRI TESTO LAIKAI:\n";
+        for (double laikas : bendriLaikai)
+            cout << laikas << " s\n";
+
+        cout << "BENDRAS VIDURKIS: "
+             << VidurkisLaiku(bendriLaikai)
+             << " s\n\n";
+    }
+}
+ 

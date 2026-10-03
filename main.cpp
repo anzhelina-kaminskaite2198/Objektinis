@@ -4,78 +4,89 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <string>
+#include <chrono>
 using namespace std;
 
 
 int main() {
-
-    ofstream varg ("vargseliai.txt");
-    ofstream kiet ("kietuoliai.txt");
-
-    varg << left
-            << setw(15) << "Vardas" 
-            << setw(20) << "Pavarde"
-            << setw(20) << "Galutinis (vid.)"
-            << setw(20) << "Galutinis (med.)" << endl
-            << "-----------------------------------------------------------------------" << endl;
-
-        
-        kiet << left
-            << setw(15) << "Vardas" 
-            << setw(20) << "Pavarde"
-            << setw(20) << "Galutinis (vid.)"
-            << setw(20) << "Galutinis (med.)" << endl
-            << "-----------------------------------------------------------------------" << endl;
-
-    varg.close();
-    kiet.close();
-
+    vector<Studentas> studentai;
     int pasirinkimas;
     
     while (true) {
         cout << "\n              MENIU\n"
-        << "-----------------------------------\n"
-        << "1  Ivesti nauja studenta\n"
-        << "2  Nuskaityti duomenis is failo\n"
-        << "3  Rodyti studentus\n"
-        << "4  Iseiti\n\n"
-        << "Pasirinkite veiksma:";
-    
+             << "-----------------------------------\n"
+             << "1  Ivesti nauja studenta\n"
+             << "2  Nuskaityti duomenis is failo\n"
+             << "3  Padalinti, surusiuoti ir irasyti studentus i failus\n"
+             << "4  Sukurti testavimo failus (5 failai)\n"
+             << "5  Paleisti testavimus (5 failai)\n"
+             << "6  Iseiti\n\n"
+             << "Pasirinkite veiksma: ";
+
         cin >> pasirinkimas;
         
-        if (cin.fail()) {
-            cin.clear();
-            cin.ignore(100000000, '\n');
-            cout << "\n\n\033[31mKlaida: netinkamas pasirinkimas.\033[0m" << endl;
-            continue;
-        }
+        if (!IvedimoKlaidos(pasirinkimas, 6)) { continue; }
         
         switch (pasirinkimas) {
         
             case 1: {
-                IvestiStudenta();
+                IvestiStudenta(studentai);
                 continue;
             }
             case 2: {
-                SkaitytiIsFailo();
-                continue;
-            }
-            case 3: {
-                
-                IrasytiStudentus();
+                string failas;
+                cout << "Is kokio failo noretumet nuskaityti studentu duomenis?\n"
+                     << "pvz: kursiokai.txt\n";
+                cin >> failas;
+ 
+                double FailuNuskaitymoLaikas = SkaitytiIsFailo(failas, studentai);
+                if (FailuNuskaitymoLaikas >= 0) {
+                    cout << "\033[32mFailas sekmingai nuskaitytas!\033[0m\n"
+                         << "Nuskaitymo laikas: " << fixed << setprecision(6) << FailuNuskaitymoLaikas << " s\n";
                 }
-                    
-                if (neteisingi.size() > 0) {
+                if (!neteisingi.empty()) {
                     cout << "\n\nDel duomenu ivedimo klaidos i sarasa nebuvo ivesti sie studentai:\n";
-                    for (NeteisingiDuomenys studentas: neteisingi){
+                    for (const NeteisingiDuomenys& studentas : neteisingi) {
                         cout << studentas.vardas << " " << studentas.pavarde << endl;
                     }
                 }
-                
                 continue;
-            
+            }
+            case 3: {
+                if (studentai.empty()) {
+                cout << "\n\033[31mSarasas tuscias: pirma iveskite arba nuskaitykite studentus.\033[0m\n";
+                continue;
+                }
+                int parametras = PasirinktiRusiavimoParametra();
+ 
+                vector<Studentas> vargseliai;
+                vector<Studentas> kietuoliai;
+                double DalyjimoLaikas = DalytiStudentus(studentai, vargseliai, kietuoliai);
+                double RusiavimoLaikas = RusiuotiStudentus(vargseliai, parametras) + RusiuotiStudentus(kietuoliai, parametras);
+                double VargIrasymoLaikas = IrasytiStudentus(vargseliai, "vargseliai.txt");
+                double KietIrasymoLaikas = IrasytiStudentus(kietuoliai, "kietuoliai.txt");
+ 
+                cout << fixed << setprecision(6)
+                     << "\nDalijimo i dvi grupes laikas: " << DalyjimoLaikas << " s\n"
+                     << "Rusiavimo laikas: " << RusiavimoLaikas << " s\n"
+                     << "Vargseliu irasymo i faila laikas: " << VargIrasymoLaikas << " s\n"
+                     << "Kietuoliu irasymo i faila laikas: " << KietIrasymoLaikas << " s\n"
+                     << "Rezultatai irasyti i vargseliai.txt ir kietuoliai.txt\n";
+
+                continue;
+            }
             case 4:{
-                return 0;;
+                SukurtiVisusTestavimoFailus();
+                continue;
+            }
+            case 5:{
+                int parametras = PasirinktiRusiavimoParametra();
+                PaleistiTestus(parametras);
+                continue;
+            }
+            case 6:{
+                return 0;
             }
             default:
                 cout << "\n\n\033[31mKlaida: netinkamas pasirinkimas.\033[0m" << endl;
@@ -84,4 +95,5 @@ int main() {
 
     }
         return 0;
+    
 }
