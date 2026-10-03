@@ -17,12 +17,10 @@
 
 using namespace std;
 
-random_device rd;
-mt19937 gen(rd());
-uniform_real_distribution<double>dist(0.0, 10.0);
+static random_device rd;
+static mt19937 gen(rd());
+static uniform_real_distribution<double>dist(0.0, 10.0);
 
-vector<Studentas> vargseliai;
-vector<Studentas> kietuoliai;
 vector<NeteisingiDuomenys> neteisingi;
 
 
