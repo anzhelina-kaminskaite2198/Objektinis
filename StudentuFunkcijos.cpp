@@ -229,7 +229,7 @@ int IvestiStudenta(vector<Studentas>& studentai) {
     return 0;
 }
 
-double IrasytiStudentus(const vector<Studentas>& v, const string& failoVardas) {
+double IrasytiStudentus(const vector<Studentas>& vektorius, const string& failoVardas) {
     Laikmatis t;
 
     ofstream failas (failoVardas);    
@@ -241,7 +241,7 @@ double IrasytiStudentus(const vector<Studentas>& v, const string& failoVardas) {
             << "-----------------------------------------------------------------------" << '\n';
 
     failas << fixed << setprecision(2);
-    for (const auto& studentas : v) {
+    for (const auto& studentas : vektorius) {
         failas  << left 
                 << setw(15) << studentas.vardas 
                 << setw(20) << studentas.pavarde 
@@ -249,7 +249,7 @@ double IrasytiStudentus(const vector<Studentas>& v, const string& failoVardas) {
                 << setw(20) << studentas.galutinisMed << '\n';
     }
     failas.close();
-    return t.praejo();
+    return t.PraejesLaikas();
 }
 
 double SkaitytiIsFailo(const string& failoVardas, vector<Studentas>& studentai) {
@@ -262,8 +262,8 @@ double SkaitytiIsFailo(const string& failoVardas, vector<Studentas>& studentai) 
     }
 
     neteisingi.clear();
-    Laikmatis t;
 
+    Laikmatis t;
 
     string eilute;
     getline(failas, eilute);
@@ -294,7 +294,7 @@ double SkaitytiIsFailo(const string& failoVardas, vector<Studentas>& studentai) 
                 break;
             }
         }
-        if (neteisingasPazymys|| studentas.namuDarbai.empty()) {
+        if (neteisingasPazymys||studentas.namuDarbai.empty()) {
             NeteisingiDuomenys blogasStudentas;
             blogasStudentas.vardas = studentas.vardas;
             blogasStudentas.pavarde = studentas.pavarde;
@@ -311,23 +311,23 @@ double SkaitytiIsFailo(const string& failoVardas, vector<Studentas>& studentai) 
     }
     
     failas.close();
-    return t.praejo();
+    return t.PraejesLaikas();
 }
 
 double DalytiStudentus(vector<Studentas>& studentai, vector<Studentas>& vargseliai, vector<Studentas>& kietuoliai) {
     Laikmatis t;
  
-    for (auto& s : studentai) {
-        if (s.galutinisVid < 5.0) {
-            vargseliai.push_back(move(s));
+    for (auto& studentas : studentai) {
+        if (studentas.galutinisVid < 5.0) {
+            vargseliai.push_back(move(studentas));
         } else {
-            kietuoliai.push_back(move(s));
+            kietuoliai.push_back(move(studentas));
         }
     }
     studentai.clear();
     studentai.shrink_to_fit();
  
-    return t.praejo();
+    return t.PraejesLaikas();
 }
 
 double RusiuotiStudentus(vector<Studentas>& v, int pagal) {
@@ -345,7 +345,7 @@ double RusiuotiStudentus(vector<Studentas>& v, int pagal) {
             break;
     }
  
-    return t.praejo();
+    return t.PraejesLaikas();
 }
 
 void PaleistiTestus(int rusiavimoPasirinkimas) {
@@ -357,109 +357,58 @@ void PaleistiTestus(int rusiavimoPasirinkimas) {
     for (int n : dydziai) {
         string failas = "studentai" + to_string(n) + ".txt";
         
-        vector<double> nuskLaikai;
-        vector<double> dalLaikai;
-        vector<double> rusLaikai;
-        vector<double> vargLaikai;
-        vector<double> kietLaikai;
-        vector<double> bendriLaikai;
+        vector<double> Nuskaitymas;
+        vector<double> Dalyjimas;
+        vector<double> Rusiavimas;
+        vector<double> VargseliuIrasymas;
+        vector<double> KietuoliuIrasymas;
+        vector<double> Bendras;
 
         for (int k = 0; k < kartai; k++) {
             vector<Studentas> studentai;
             vector<Studentas> vargseliai;
             vector<Studentas> kietuoliai;
 
-            double tNusk = SkaitytiIsFailo(failas, studentai);
-            if (tNusk < 0) { break; }
-            double tDal = DalytiStudentus(studentai, vargseliai, kietuoliai);
-            double tRus = RusiuotiStudentus(vargseliai, rusiavimoPasirinkimas)
+            double NuskaitymoLaikas = SkaitytiIsFailo(failas, studentai);
+            if (NuskaitymoLaikas < 0) { break; }
+            double DalyjimoLaikas = DalytiStudentus(studentai, vargseliai, kietuoliai);
+            double RusiavimoLaikas = RusiuotiStudentus(vargseliai, rusiavimoPasirinkimas)
                   + RusiuotiStudentus(kietuoliai, rusiavimoPasirinkimas);
-            double tVarg = IrasytiStudentus(vargseliai, "vargseliai" + to_string(n) + ".txt");
-            double tKiet = IrasytiStudentus(kietuoliai, "kietuoliai" + to_string(n) + ".txt");
+            double VargIrasymoLaikas = IrasytiStudentus(vargseliai, "vargseliai" + to_string(n) + ".txt");
+            double KietIrasymoLaikas = IrasytiStudentus(kietuoliai, "kietuoliai" + to_string(n) + ".txt");
         
-            double tBendras = tNusk + tDal + tRus + tVarg + tKiet;
+            double BendrasLaikas = NuskaitymoLaikas + DalyjimoLaikas + RusiavimoLaikas + VargIrasymoLaikas + KietIrasymoLaikas;
 
-            nuskLaikai.push_back(tNusk);
-            dalLaikai.push_back(tDal);
-            rusLaikai.push_back(tRus);
-            vargLaikai.push_back(tVarg);
-            kietLaikai.push_back(tKiet);
-            bendriLaikai.push_back(tBendras);
-
-            cout << "Failas: " << n << " studentu"
-                 << " | Testas " << k + 1
-                 << " | Laikas: " << tBendras << " s\n";
+            Nuskaitymas.push_back(NuskaitymoLaikas);
+            Dalyjimas.push_back(DalyjimoLaikas);
+            Rusiavimas.push_back(RusiavimoLaikas);
+            VargseliuIrasymas.push_back(VargIrasymoLaikas);
+            KietuoliuIrasymas.push_back(KietIrasymoLaikas);
+            Bendras.push_back(BendrasLaikas);
         }
         
-         if (bendriLaikai.empty()) {
-            cout << "Failas " << failas
-                 << " nerastas.\n\n";
+         if (Bendras.empty()) {
+            cout << "\033[32mFailas " << failas << " nerastas.\033[0m\n\n";
             continue;
         }
 
         auto VidurkisLaiku = [](const vector<double>& laikai) {
             double suma = 0;
-
             for (double laikas : laikai) {
                 suma += laikas;
             }
-
             return suma / laikai.size();
         };
-        cout << "\n========== "
-             << n << " STUDENTU ==========\n";
+        
+        cout << "\n      "<< n << " STUDENTU \n"
+             << "----------------------------------------" << endl;
 
-        cout << "Nuskaitymo laikai:\n";
-        for (double laikas : nuskLaikai)
-            cout << laikas << " s\n";
-
-        cout << "Vidurkis: "
-             << VidurkisLaiku(nuskLaikai)
-             << " s\n\n";
-
-
-        cout << "Dalijimo laikai:\n";
-        for (double laikas : dalLaikai)
-            cout << laikas << " s\n";
-
-        cout << "Vidurkis: "
-             << VidurkisLaiku(dalLaikai)
-             << " s\n\n";
-
-
-        cout << "Rusiuavimo laikai:\n";
-        for (double laikas : rusLaikai)
-            cout << laikas << " s\n";
-
-        cout << "Vidurkis: "
-             << VidurkisLaiku(rusLaikai)
-             << " s\n\n";
-
-        cout << "Vargsheliu irasymo laikai:\n";
-        for (double laikas : vargLaikai)
-            cout << laikas << " s\n";
-
-        cout << "Vidurkis: "
-             << VidurkisLaiku(vargLaikai)
-             << " s\n\n";
-
-
-        cout << "Kietuoliu irasymo laikai:\n";
-        for (double laikas : kietLaikai)
-            cout << laikas << " s\n";
-
-        cout << "Vidurkis: "
-             << VidurkisLaiku(kietLaikai)
-             << " s\n\n";
-
-
-        cout << "BENDRI TESTO LAIKAI:\n";
-        for (double laikas : bendriLaikai)
-            cout << laikas << " s\n";
-
-        cout << "BENDRAS VIDURKIS: "
-             << VidurkisLaiku(bendriLaikai)
-             << " s\n\n";
+        cout << "Nuskaitymo laiku vidurkis: " << VidurkisLaiku(Nuskaitymas)<< " s\n"
+             << "Dalijimo laiku vidurkis: " << VidurkisLaiku(Dalyjimas) << " s\n"
+             << "Rusiuavimo laiku vidurkis: " << VidurkisLaiku(Rusiavimas) << " s\n"
+             << "Vargsheliu irasymo laiku vidurkis: " << VidurkisLaiku(VargseliuIrasymas) << " s\n"
+             << "Kietuoliu irasymo laiku vidurkis: " << VidurkisLaiku(KietuoliuIrasymas) << " s\n\n"
+             << "Bendras tetso laikas: " << VidurkisLaiku(Bendras) << " s\n\n";
     }
 }
  

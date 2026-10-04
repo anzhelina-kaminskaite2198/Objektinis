@@ -12,7 +12,7 @@ extern vector<NeteisingiDuomenys> neteisingi;
 
 struct Laikmatis {
     chrono::high_resolution_clock::time_point pradzia = chrono::high_resolution_clock::now();
-    double praejo() const {
+    double PraejesLaikas() const {
         return chrono::duration<double>(chrono::high_resolution_clock::now() - pradzia).count();
     }
 };
