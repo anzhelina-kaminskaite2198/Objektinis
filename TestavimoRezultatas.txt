@@ -1,0 +1,99 @@
+
+              MENIU
+-----------------------------------
+1  Ivesti nauja studenta
+2  Nuskaityti duomenis is failo
+3  Padalinti, surusiuoti ir irasyti studentus i failus
+4  Sukurti testavimo failus (5 failai)
+5  Paleisti testavimus (5 failai)
+6  Iseiti
+
+Pasirinkite veiksma: 4
+1000 irasu failo sukurimo laikas: 0.021745
+10000 irasu failo sukurimo laikas: 0.147219
+100000 irasu failo sukurimo laikas: 0.994314
+1000000 irasu failo sukurimo laikas: 9.063218
+10000000 irasu failo sukurimo laikas: 107.000255
+
+
+              MENIU
+-----------------------------------
+1  Ivesti nauja studenta
+2  Nuskaityti duomenis is failo
+3  Padalinti, surusiuoti ir irasyti studentus i failus
+4  Sukurti testavimo failus (5 failai)
+5  Paleisti testavimus (5 failai)
+6  Iseiti
+
+Pasirinkite veiksma: 5
+
+Pagal ka rusiuoti studentus?
+1  Pagal varda
+2  Pagal pavarde
+3  Pagal galutini bala
+
+2
+
+      1000 STUDENTU 
+----------------------------------------
+Nuskaitymo laiku vidurkis: 0.004884 s
+Dalijimo laiku vidurkis: 0.000095 s
+Rusiuavimo laiku vidurkis: 0.000233 s
+Vargsheliu irasymo laiku vidurkis: 0.011353 s
+Kietuoliu irasymo laiku vidurkis: 0.007969 s
+
+Bendras tetso laikas: 0.024532 s
+
+
+      10000 STUDENTU 
+----------------------------------------
+Nuskaitymo laiku vidurkis: 0.022835 s
+Dalijimo laiku vidurkis: 0.001649 s
+Rusiuavimo laiku vidurkis: 0.003340 s
+Vargsheliu irasymo laiku vidurkis: 0.015466 s
+Kietuoliu irasymo laiku vidurkis: 0.012851 s
+
+Bendras tetso laikas: 0.056139 s
+
+
+      100000 STUDENTU 
+----------------------------------------
+Nuskaitymo laiku vidurkis: 0.213504 s
+Dalijimo laiku vidurkis: 0.009527 s
+Rusiuavimo laiku vidurkis: 0.036433 s
+Vargsheliu irasymo laiku vidurkis: 0.127506 s
+Kietuoliu irasymo laiku vidurkis: 0.093425 s
+
+Bendras tetso laikas: 0.480396 s
+
+
+      1000000 STUDENTU 
+----------------------------------------
+Nuskaitymo laiku vidurkis: 2.099244 s
+Dalijimo laiku vidurkis: 0.071734 s
+Rusiuavimo laiku vidurkis: 0.512861 s
+Vargsheliu irasymo laiku vidurkis: 1.234080 s
+Kietuoliu irasymo laiku vidurkis: 0.823357 s
+
+Bendras tetso laikas: 4.741276 s
+
+
+      10000000 STUDENTU 
+----------------------------------------
+Nuskaitymo laiku vidurkis: 56.827583 s
+Dalijimo laiku vidurkis: 2.035147 s
+Rusiuavimo laiku vidurkis: 10.565077 s
+Vargsheliu irasymo laiku vidurkis: 17.914918 s
+Kietuoliu irasymo laiku vidurkis: 18.674985 s
+
+Bendras tetso laikas: 106.017710 s
+
+
+              MENIU
+-----------------------------------
+1  Ivesti nauja studenta
+2  Nuskaityti duomenis is failo
+3  Padalinti, surusiuoti ir irasyti studentus i failus
+4  Sukurti testavimo failus (5 failai)
+5  Paleisti testavimus (5 failai)
+6  Iseiti

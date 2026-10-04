@@ -4,3 +4,4 @@ practice.cpp
 *.json
 lab1.cpp
 *.txt
+!TestavimoRezultatas.txt
