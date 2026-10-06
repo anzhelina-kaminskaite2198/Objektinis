@@ -6,11 +6,14 @@
 #include <fstream>
 #include <string>
 #include <chrono>
+#include <list>
 using namespace std;
 
 
 int main() {
     vector<Studentas> studentai;
+    list<Studentas> studentaiList;
+    
     int pasirinkimas;
     
     while (true) {
@@ -62,6 +65,10 @@ int main() {
  
                 vector<Studentas> vargseliai;
                 vector<Studentas> kietuoliai;
+                list<Studentas> vargseliaiList;
+                list<Studentas> kietuoliaiList;
+
+
                 double DalyjimoLaikas = DalytiStudentus(studentai, vargseliai, kietuoliai);
                 double RusiavimoLaikas = RusiuotiStudentus(vargseliai, parametras) + RusiuotiStudentus(kietuoliai, parametras);
                 double VargIrasymoLaikas = IrasytiStudentus(vargseliai, "vargseliai.txt");

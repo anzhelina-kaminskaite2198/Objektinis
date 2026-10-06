@@ -15,6 +15,7 @@
 #include <random>
 #include <limits>
 #include <stdexcept>
+#include <list>
 
 using namespace std;
 
@@ -23,6 +24,7 @@ static mt19937 gen(rd());
 static uniform_real_distribution<double>dist(0.0, 10.0);
 
 vector<NeteisingiDuomenys> neteisingi;
+list<Studentas> neteisingiList;
 
 
 bool IvedimoKlaidos (int kintamasis, int pasirinkimuSk) {
@@ -84,7 +86,8 @@ double Mediana(const Studentas& studentas) {
     return round(galutinis * 100.0) / 100.0;
 }
 
-int IvestiStudenta(vector<Studentas>& studentai) {
+template <typename Container>
+int IvestiStudenta(Container& studentai) {
 
     Studentas studentas;
 
@@ -229,7 +232,8 @@ int IvestiStudenta(vector<Studentas>& studentai) {
     return 0;
 }
 
-double IrasytiStudentus(const vector<Studentas>& vektorius, const string& failoVardas) {
+template <typename Container>
+double IrasytiStudentus(const Container& vektorius, const string& failoVardas) {
     Laikmatis t;
 
     ofstream failas (failoVardas);    
@@ -252,7 +256,8 @@ double IrasytiStudentus(const vector<Studentas>& vektorius, const string& failoV
     return t.PraejesLaikas();
 }
 
-double SkaitytiIsFailo(const string& failoVardas, vector<Studentas>& studentai) {
+template <typename Container>
+double SkaitytiIsFailo(const string& failoVardas, Container& studentai) {
    
     ifstream failas (failoVardas);
 
@@ -314,7 +319,8 @@ double SkaitytiIsFailo(const string& failoVardas, vector<Studentas>& studentai) 
     return t.PraejesLaikas();
 }
 
-double DalytiStudentus(vector<Studentas>& studentai, vector<Studentas>& vargseliai, vector<Studentas>& kietuoliai) {
+template <typename Container>
+double DalytiStudentus(Container& studentai, Container& vargseliai, Container& kietuoliai) {
     Laikmatis t;
  
     for (auto& studentas : studentai) {
@@ -325,12 +331,13 @@ double DalytiStudentus(vector<Studentas>& studentai, vector<Studentas>& vargseli
         }
     }
     studentai.clear();
-    studentai.shrink_to_fit();
+    //studentai.shrink_to_fit();
  
     return t.PraejesLaikas();
 }
 
-double RusiuotiStudentus(vector<Studentas>& v, int pagal) {
+template <typename Container>
+double RusiuotiStudentus(Container& v, int pagal) {
     Laikmatis t;
  
     switch (pagal) {
