@@ -11,6 +11,8 @@ using namespace std;
 
 
 int main() {
+    vector<NeteisingiDuomenys> neteisingi;
+    list<Studentas> neteisingiList;
     vector<Studentas> studentai;
     list<Studentas> studentaiList;
     
