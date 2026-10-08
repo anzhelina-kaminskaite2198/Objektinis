@@ -24,7 +24,7 @@ static mt19937 gen(rd());
 static uniform_real_distribution<double>dist(0.0, 10.0);
 
 extern vector<NeteisingiDuomenys> neteisingi;
-extern list<Studentas> neteisingiList;
+extern list<NeteisingiDuomenys> neteisingiList;
 
 
 bool IvedimoKlaidos (int kintamasis, int pasirinkimuSk) {
@@ -226,9 +226,20 @@ int IvestiStudenta(Container& studentai) {
     studentas.galutinisMed = Mediana(studentas);
     studentai.push_back(studentas);
  
+    cout << "\n Studentas sekmingai ivestas!\n" 
+         << setw(15) << "Vardas"
+         << setw(20) << "Pavarde"
+         << setw(20) << "Galutinis (vid.)"
+         << setw(20) << "Galutinis (med.)" 
+         << setw(20) << "Adresas" '\n'
+         << "-----------------------------------------------------------------------" << '\n'; 
 
-    
-
+    cout << left 
+         << setw(15) << studentas.back().vardas 
+         << setw(20) << studentas.back().pavarde 
+         << setw(20) << studentas.back().galutinisVid
+         << setw(20) << studentas.back().galutinisMed 
+         << setw(20) << static_cast<const void*>(&studentai.back()) '\n';
     return 0;
 }
 

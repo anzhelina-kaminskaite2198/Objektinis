@@ -1,5 +1,6 @@
 #include "Strukturos.h"
 #include "StudentuFunkcijos.h"
+#include "TestiniaiFailai.cpp"
 
 #include <iostream>
 #include <iomanip>
@@ -12,7 +13,7 @@ using namespace std;
 
 int main() {
     vector<NeteisingiDuomenys> neteisingi;
-    list<Studentas> neteisingiList;
+    list<NeteisingiDuomenys> neteisingiList;
     vector<Studentas> studentai;
     list<Studentas> studentaiList;
     
