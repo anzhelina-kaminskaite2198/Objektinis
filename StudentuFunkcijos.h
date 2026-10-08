@@ -377,14 +377,15 @@ void RikiotiStudentus(Container& v, auto LambdaKriterijus){
     }
 }
 
-void PaleistiTestus(int rusiavimoPasirinkimas) {
+template <typename Container>
+void TestuotiKonteinerius(int rusiavimoPasirinkimas, string pavadinimas) {
     const int dydziai[] = {1000, 10000, 100000, 1000000, 10000000};
  
     const int kartai = 3;
     cout << fixed << setprecision(6);
- 
+    cout << "----------" << pavadinimas << "-----------"
     for (int n : dydziai) {
-        string failas = "studentai" + to_string(n) + ".txt";
+        string failas = "studentai" + to_string(n) + pavadinimas + ".txt";
         
         vector<double> Nuskaitymas;
         vector<double> Dalyjimas;
@@ -394,9 +395,9 @@ void PaleistiTestus(int rusiavimoPasirinkimas) {
         vector<double> Bendras;
 
         for (int k = 0; k < kartai; k++) {
-            vector<Studentas> studentai;
-            vector<Studentas> vargseliai;
-            vector<Studentas> kietuoliai;
+            Container studentai;
+            Container vargseliai;
+            Container kietuoliai;
 
             double NuskaitymoLaikas = SkaitytiIsFailo(failas, studentai);
             if (NuskaitymoLaikas < 0) { break; }
@@ -438,7 +439,20 @@ void PaleistiTestus(int rusiavimoPasirinkimas) {
              << "Vargsheliu irasymo laiku vidurkis: " << VidurkisLaiku(VargseliuIrasymas) << " s\n"
              << "Kietuoliu irasymo laiku vidurkis: " << VidurkisLaiku(KietuoliuIrasymas) << " s\n\n"
              << "Bendras tetso laikas: " << VidurkisLaiku(Bendras) << " s\n\n";
+
+        Nuskaitymas.clear();
+        Dalyjimas.clear();
+        Rusiavimas.clear();
+        VargseliuIrasymas.clear();
+        KietuoliuIrasymas.clear();
+        Bendras.clear();
     }
 }
+void PaleistiTestus(int rusiavimoPasirinkimas){
+    TestuotiKonteinerius<vector<Studentas>>(rusiavimoPasirinkimas, "VEKTORIUS");
+    TestuotiKonteinerius<list<Studentas>>(rusiavimoPasirinkimas, "LIST");
+
+}
+
  
 #endif
