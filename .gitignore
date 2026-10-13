@@ -4,5 +4,5 @@ practice.cpp
 *.json
 lab1.cpp
 *.txt
-!TestavimoRezultatas.txt
+!TestavimoRezultatasV02.txt
 !TestavimoRezultatasV03.txt
