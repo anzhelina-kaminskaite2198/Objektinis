@@ -7,8 +7,6 @@
 #include <string>
 using namespace std;
 
-static random_device rd;
-static mt19937 gen(rd());
 static uniform_int_distribution<int>ivertinimas(0, 10);
 
 double SukurtiTestavimoFailus(int studentuSk, int ndSk) {

@@ -16,18 +16,17 @@
 #include <limits>
 #include <stdexcept>
 #include <list>
+#include <chrono>
 
 using namespace std;
 
-static random_device rd;
-static mt19937 gen(rd());
-static uniform_real_distribution<double>dist(0.0, 10.0);
+inline static random_device rd;
+inline static mt19937 gen(rd());
+inline static uniform_real_distribution<double>dist(0.0, 10.0);
 
-extern vector<NeteisingiDuomenys> neteisingi;
-extern list<NeteisingiDuomenys> neteisingiList;
+inline vector<NeteisingiDuomenys> neteisingi;
 
-
-bool IvedimoKlaidos (int kintamasis, int pasirinkimuSk) {
+inline bool IvedimoKlaidos (int kintamasis, int pasirinkimuSk) {
     if (cin.fail()) {
         cin.clear();
         cin.ignore(100000000, '\n');
@@ -42,7 +41,7 @@ bool IvedimoKlaidos (int kintamasis, int pasirinkimuSk) {
     }
 }
 
-int PasirinktiRusiavimoParametra() {
+inline int PasirinktiRusiavimoParametra() {
     int pasirinkimas;
     while (true) {
         cout << "\nPagal ka rusiuoti studentus?\n"
@@ -55,7 +54,7 @@ int PasirinktiRusiavimoParametra() {
     return pasirinkimas;
 }
 
-double Vidurkis(const Studentas& studentas) {
+inline double Vidurkis(const Studentas& studentas) {
     double suma = 0;
     for (int i = 0; i < studentas.namuDarbai.size(); i++) {
         suma += studentas.namuDarbai[i];
@@ -70,7 +69,7 @@ double Vidurkis(const Studentas& studentas) {
     return  round(galutinis * 100.0) / 100.0;
 }
 
-double Mediana(const Studentas& studentas) {
+inline double Mediana(const Studentas& studentas) {
     vector<double> ndPazymiai = studentas.namuDarbai;
     sort(ndPazymiai.begin(), ndPazymiai.end());
     double mediana;
@@ -231,15 +230,15 @@ int IvestiStudenta(Container& studentai) {
          << setw(20) << "Pavarde"
          << setw(20) << "Galutinis (vid.)"
          << setw(20) << "Galutinis (med.)" 
-         << setw(20) << "Adresas" '\n'
+         << setw(20) << "Adresas" << '\n'
          << "-----------------------------------------------------------------------" << '\n'; 
 
     cout << left 
-         << setw(15) << studentas.back().vardas 
-         << setw(20) << studentas.back().pavarde 
-         << setw(20) << studentas.back().galutinisVid
-         << setw(20) << studentas.back().galutinisMed 
-         << setw(20) << static_cast<const void*>(&studentai.back()) '\n';
+         << setw(15) << studentas.vardas 
+         << setw(20) << studentas.pavarde 
+         << setw(20) << studentas.galutinisVid
+         << setw(20) << studentas.galutinisMed 
+         << setw(20) << static_cast<const void*>(&studentai.back()) << '\n';
     return 0;
 }
 
@@ -344,9 +343,18 @@ double DalytiStudentus(Container& studentai, Container& vargseliai, Container& k
     studentai.clear();
     if constexpr (is_same_v<Container, vector<Studentas>>){
         studentai.shrink_to_fit();
-    } else {break;}
+    }
 
     return t.PraejesLaikas();
+}
+
+template <typename Container, typename Lambda>
+void RikiotiStudentus(Container& v, Lambda kriterijus){
+    if constexpr(is_same_v<Container, vector<Studentas>>){
+        sort(v.begin(), v.end(), kriterijus);
+    } else if constexpr (is_same_v<Container, list<Studentas>>){
+        v.sort(kriterijus);
+    }
 }
 
 template <typename Container>
@@ -369,23 +377,14 @@ double RusiuotiStudentus(Container& v, int pagal) {
 }
 
 template <typename Container>
-void RikiotiStudentus(Container& v, auto LambdaKriterijus){
-    if constexpr(is_same_v<Container, vector<Studentas>>){
-        sort(v.begin(), v.end(), LambdaKriterijus);
-    } else if constexpr (is_same_v<Container, list<Studentas>>){
-        v.sort(LambdaKriterijus);
-    }
-}
-
-template <typename Container>
 void TestuotiKonteinerius(int rusiavimoPasirinkimas, string pavadinimas) {
     const int dydziai[] = {1000, 10000, 100000, 1000000, 10000000};
  
     const int kartai = 3;
     cout << fixed << setprecision(6);
-    cout << "----------" << pavadinimas << "-----------"
+    cout << "----------" << pavadinimas << "-----------";
     for (int n : dydziai) {
-        string failas = "studentai" + to_string(n) + pavadinimas + ".txt";
+        string failas = "studentai" + to_string(n) + ".txt";
         
         vector<double> Nuskaitymas;
         vector<double> Dalyjimas;
@@ -404,8 +403,8 @@ void TestuotiKonteinerius(int rusiavimoPasirinkimas, string pavadinimas) {
             double DalyjimoLaikas = DalytiStudentus(studentai, vargseliai, kietuoliai);
             double RusiavimoLaikas = RusiuotiStudentus(vargseliai, rusiavimoPasirinkimas)
                   + RusiuotiStudentus(kietuoliai, rusiavimoPasirinkimas);
-            double VargIrasymoLaikas = IrasytiStudentus(vargseliai, "vargseliai" + to_string(n) + ".txt");
-            double KietIrasymoLaikas = IrasytiStudentus(kietuoliai, "kietuoliai" + to_string(n) + ".txt");
+            double VargIrasymoLaikas = IrasytiStudentus(vargseliai, "vargseliai" + to_string(n) + pavadinimas + ".txt");
+            double KietIrasymoLaikas = IrasytiStudentus(kietuoliai, "kietuoliai" + to_string(n) + pavadinimas + ".txt");
         
             double BendrasLaikas = NuskaitymoLaikas + DalyjimoLaikas + RusiavimoLaikas + VargIrasymoLaikas + KietIrasymoLaikas;
 
@@ -448,11 +447,13 @@ void TestuotiKonteinerius(int rusiavimoPasirinkimas, string pavadinimas) {
         Bendras.clear();
     }
 }
-void PaleistiTestus(int rusiavimoPasirinkimas){
+ inline void PaleistiTestus(int rusiavimoPasirinkimas){
     TestuotiKonteinerius<vector<Studentas>>(rusiavimoPasirinkimas, "VEKTORIUS");
     TestuotiKonteinerius<list<Studentas>>(rusiavimoPasirinkimas, "LIST");
 
 }
 
+double SukurtiTestavimoFailus(int studentuSk, int ndSk);
+void SukurtiVisusTestavimoFailus();
  
 #endif

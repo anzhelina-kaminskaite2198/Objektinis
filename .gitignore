@@ -5,3 +5,4 @@ practice.cpp
 lab1.cpp
 *.txt
 !TestavimoRezultatas.txt
+!TestavimoRezultatasV03.txt

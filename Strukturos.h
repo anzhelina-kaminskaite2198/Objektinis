@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <chrono>
 using namespace std;
 
 struct Studentas {
@@ -19,6 +20,11 @@ struct NeteisingiDuomenys {
     string pavarde;
 };
 
-
+struct Laikmatis {
+    chrono::high_resolution_clock::time_point pradzia = chrono::high_resolution_clock::now();
+    double PraejesLaikas() const {
+        return chrono::duration<double>(chrono::high_resolution_clock::now() - pradzia).count();
+    }
+};
 
 #endif
