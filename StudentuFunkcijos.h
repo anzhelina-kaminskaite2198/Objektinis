@@ -90,11 +90,8 @@ int IvestiStudenta(Container& studentai) {
 
     Studentas studentas;
 
-    cout << "Studento vardas: ";
-    cin >> studentas.vardas;
-
-    cout << "Studento pavarde: ";
-    cin >> studentas.pavarde;
+    cout << "Iveskite studento varda ir pavarde\n" << "pvz: Vardenis Pavardenis\n";
+    cin >> studentas;
     cin.ignore();
 
     int pasirinkimas_nd;
@@ -225,7 +222,8 @@ int IvestiStudenta(Container& studentai) {
     studentas.galutinisMed = Mediana(studentas);
     studentai.push_back(studentas);
  
-    cout << "\n Studentas sekmingai ivestas!\n" 
+    cout << "\n \033[32m Studentas sekmingai ivestas! \033[0m\n\n"
+         << left
          << setw(15) << "Vardas"
          << setw(20) << "Pavarde"
          << setw(20) << "Galutinis (vid.)"
@@ -237,7 +235,7 @@ int IvestiStudenta(Container& studentai) {
          << setw(15) << studentas.vardas 
          << setw(20) << studentas.pavarde 
          << setw(20) << studentas.galutinisVid
-         << setw(20) << studentas.galutinisMed 
+         << setw(20) << studentas.galutinisMed
          << setw(20) << static_cast<const void*>(&studentai.back()) << '\n';
     return 0;
 }
@@ -417,7 +415,7 @@ void TestuotiKonteinerius(int rusiavimoPasirinkimas, string pavadinimas) {
         }
         
          if (Bendras.empty()) {
-            cout << "\033[32mFailas " << failas << " nerastas.\033[0m\n\n";
+            cout << "\033[31mFailas " << failas << " nerastas.\033[0m\n\n";
             continue;
         }
 

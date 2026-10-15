@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 #include <chrono>
+#include <iostream>
+#include <string>
 using namespace std;
 
 struct Studentas {
@@ -13,6 +15,10 @@ struct Studentas {
     double egzaminas;
     double galutinisVid;
     double galutinisMed;
+    friend istream& operator >> (istream& in, Studentas& A) {
+        in >> A.vardas >> A.pavarde;
+        return in;
+    }
 };
 
 struct NeteisingiDuomenys {
