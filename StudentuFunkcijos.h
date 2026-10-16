@@ -54,6 +54,30 @@ inline int PasirinktiRusiavimoParametra() {
     return pasirinkimas;
 }
 
+enum Konteineris { NEPASIRINKTA = 0, VEKTORIUS = 1, LISTAS = 2 };
+
+inline int PasirinktiKonteineri() {
+    int pasirinkimas;
+    while (true) {
+        cout << "\nKur saugoti studentus?\n"
+             << "1 std::vector\n"
+             << "2 std::list\n"
+             << "Pasirinkite: ";
+        cin >> pasirinkimas;
+        if (IvedimoKlaidos(pasirinkimas, 2)) { break; }
+    }
+    return pasirinkimas;
+}
+
+inline void NustatytiKonteineri(int& konteineris, bool tuscia) {
+    if (tuscia || konteineris == NEPASIRINKTA) {
+        konteineris = PasirinktiKonteineri();
+    } else {
+        cout << "\nNaudojamas konteineris: "
+             << (konteineris == VEKTORIUS ? "std::vector" : "std::list") << endl;
+    }
+}
+
 inline double Vidurkis(const Studentas& studentas) {
     double suma = 0;
     for (int i = 0; i < studentas.namuDarbai.size(); i++) {
@@ -372,6 +396,25 @@ double RusiuotiStudentus(Container& v, int pagal) {
     }
  
     return t.PraejesLaikas();
+}
+
+template <typename Container>
+void DalintiRusiuotiIrasyti(Container& studentai, int parametras) {
+    Container vargseliai;
+    Container kietuoliai;
+
+    double DalyjimoLaikas = DalytiStudentus(studentai, vargseliai, kietuoliai);
+    double RusiavimoLaikas = RusiuotiStudentus(vargseliai, parametras)
+                           + RusiuotiStudentus(kietuoliai, parametras);
+    double VargIrasymoLaikas = IrasytiStudentus(vargseliai, "vargseliai.txt");
+    double KietIrasymoLaikas = IrasytiStudentus(kietuoliai, "kietuoliai.txt");
+
+    cout << fixed << setprecision(6)
+         << "\nDalijimo i dvi grupes laikas: " << DalyjimoLaikas << " s\n"
+         << "Rusiavimo laikas: " << RusiavimoLaikas << " s\n"
+         << "Vargseliu irasymo i faila laikas: " << VargIrasymoLaikas << " s\n"
+         << "Kietuoliu irasymo i faila laikas: " << KietIrasymoLaikas << " s\n"
+         << "Rezultatai irasyti i vargseliai.txt ir kietuoliai.txt\n";
 }
 
 template <typename Container>

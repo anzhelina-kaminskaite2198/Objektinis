@@ -7,13 +7,15 @@
 #include <string>
 #include <chrono>
 #include <list>
+#include <vector>
 using namespace std;
 
 
 int main() {
     vector<Studentas> studentai;
     list<Studentas> studentaiList;
-    
+
+    int konteineris = NEPASIRINKTA;
     int pasirinkimas;
     
     while (true) {
@@ -34,16 +36,29 @@ int main() {
         switch (pasirinkimas) {
         
             case 1: {
-                IvestiStudenta(studentai);
+                NustatytiKonteineri(konteineris, studentai.empty() && studentaiList.empty());
+                if (konteineris == VEKTORIUS) {
+                    IvestiStudenta(studentai);
+                } else {
+                    IvestiStudenta(studentaiList);
+                }
                 continue;
             }
             case 2: {
+                NustatytiKonteineri(konteineris, studentai.empty() && studentaiList.empty());
+
                 string failas;
                 cout << "Is kokio failo noretumet nuskaityti studentu duomenis?\n"
                      << "pvz: kursiokai.txt\n";
                 cin >> failas;
  
-                double FailuNuskaitymoLaikas = SkaitytiIsFailo(failas, studentai);
+                double FailuNuskaitymoLaikas;
+                if (konteineris == VEKTORIUS) {
+                    FailuNuskaitymoLaikas = SkaitytiIsFailo(failas, studentai);
+                } else {
+                    FailuNuskaitymoLaikas = SkaitytiIsFailo(failas, studentaiList);
+                }
+
                 if (FailuNuskaitymoLaikas >= 0) {
                     cout << "\033[32mFailas sekmingai nuskaitytas!\033[0m\n"
                          << "Nuskaitymo laikas: " << fixed << setprecision(6) << FailuNuskaitymoLaikas << " s\n";
@@ -57,30 +72,17 @@ int main() {
                 continue;
             }
             case 3: {
-                if (studentai.empty()) {
+                if (studentai.empty() && studentaiList.empty()) {
                 cout << "\n\033[31mSarasas tuscias: pirma iveskite arba nuskaitykite studentus.\033[0m\n";
                 continue;
                 }
                 int parametras = PasirinktiRusiavimoParametra();
  
-                vector<Studentas> vargseliai;
-                vector<Studentas> kietuoliai;
-                list<Studentas> vargseliaiList;
-                list<Studentas> kietuoliaiList;
-
-
-                double DalyjimoLaikas = DalytiStudentus(studentai, vargseliai, kietuoliai);
-                double RusiavimoLaikas = RusiuotiStudentus(vargseliai, parametras) + RusiuotiStudentus(kietuoliai, parametras);
-                double VargIrasymoLaikas = IrasytiStudentus(vargseliai, "vargseliai.txt");
-                double KietIrasymoLaikas = IrasytiStudentus(kietuoliai, "kietuoliai.txt");
- 
-                cout << fixed << setprecision(6)
-                     << "\nDalijimo i dvi grupes laikas: " << DalyjimoLaikas << " s\n"
-                     << "Rusiavimo laikas: " << RusiavimoLaikas << " s\n"
-                     << "Vargseliu irasymo i faila laikas: " << VargIrasymoLaikas << " s\n"
-                     << "Kietuoliu irasymo i faila laikas: " << KietIrasymoLaikas << " s\n"
-                     << "Rezultatai irasyti i vargseliai.txt ir kietuoliai.txt\n";
-
+                if (konteineris == VEKTORIUS) {
+                    DalintiRusiuotiIrasyti(studentai, parametras);
+                } else {
+                    DalintiRusiuotiIrasyti(studentaiList, parametras);
+                }
                 continue;
             }
             case 4:{
