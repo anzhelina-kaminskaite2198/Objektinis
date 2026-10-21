@@ -55,6 +55,7 @@ inline int PasirinktiRusiavimoParametra() {
 }
 
 enum Konteineris { NEPASIRINKTA = 0, VEKTORIUS = 1, LISTAS = 2 };
+enum Strategija {Mano, S1, S2, Optimizuota};
 
 inline int PasirinktiKonteineri() {
     int pasirinkimas;
@@ -444,8 +445,16 @@ void TestuotiKonteinerius(int rusiavimoPasirinkimas, string pavadinimas) {
             double DalyjimoLaikas = DalytiStudentus(studentai, vargseliai, kietuoliai);
             double RusiavimoLaikas = RusiuotiStudentus(vargseliai, rusiavimoPasirinkimas)
                   + RusiuotiStudentus(kietuoliai, rusiavimoPasirinkimas);
-            double VargIrasymoLaikas = IrasytiStudentus(vargseliai, "vargseliai" + to_string(n) + pavadinimas + ".txt");
-            double KietIrasymoLaikas = IrasytiStudentus(kietuoliai, "kietuoliai" + to_string(n) + pavadinimas + ".txt");
+            double VargIrasymoLaikas;
+            double KietIrasymoLaikas;
+            if (n == 1000) {
+                VargIrasymoLaikas = IrasytiStudentus(vargseliai, "vargseliai" + to_string(n) + pavadinimas + ".txt");
+                KietIrasymoLaikas = IrasytiStudentus(kietuoliai, "kietuoliai" + to_string(n) + pavadinimas + ".txt");
+            } else {
+                VargIrasymoLaikas = IrasytiStudentus(vargseliai, "vargseliai" + to_string(n) + ".txt");
+                KietIrasymoLaikas = IrasytiStudentus(kietuoliai, "kietuoliai" + to_string(n) + ".txt");
+            }
+            
         
             double BendrasLaikas = NuskaitymoLaikas + DalyjimoLaikas + RusiavimoLaikas + VargIrasymoLaikas + KietIrasymoLaikas;
 
