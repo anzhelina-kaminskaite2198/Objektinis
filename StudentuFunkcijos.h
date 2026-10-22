@@ -55,7 +55,6 @@ inline int PasirinktiRusiavimoParametra() {
 }
 
 enum Konteineris { NEPASIRINKTA = 0, VEKTORIUS = 1, LISTAS = 2 };
-enum Strategija {Mano, S1, S2, Optimizuota};
 
 inline int PasirinktiKonteineri() {
     int pasirinkimas;
@@ -353,6 +352,7 @@ double SkaitytiIsFailo(const string& failoVardas, Container& studentai) {
 }
 
 
+enum Strategija {Mano, S1, S2, Optimizuota};
 
 template <typename Container>
 double DalytiStudentus_S1(Container& studentai, Container& vargseliai, Container& kietuoliai) {
@@ -385,7 +385,7 @@ double DalytiStudentus_S2(Container& studentai, Container& vargseliai, Container
 }
 
 template <typename Container>
-double DalytiStudentus_Sava(Container& studentai, Container& vargseliai, Container& kietuoliai) {
+double DalytiStudentus_Mano(Container& studentai, Container& vargseliai, Container& kietuoliai) {
     Laikmatis t;
  
     for (auto& studentas : studentai) {
@@ -402,6 +402,26 @@ double DalytiStudentus_Sava(Container& studentai, Container& vargseliai, Contain
 
     return t.PraejesLaikas();
 }
+
+template <typename Container>
+double Dalyti(Strategija strategija, Container& studentai, Container& vargseliai, Container& kietuoliai) {
+    switch (strategija) {
+        case S1:
+            return DalytiStudentus_S1(studentai, vargseliai, kietuoliai);
+        case S2: {
+            double t = DalytiStudentus_S2(studentai, vargseliai);
+            kietuoliai = std::move(studentai);
+            return t;
+        }
+        case Mano:
+            return DalytiStudentus_Sava(studentai, vargseliai, kietuoliai);
+        case Optimizuota:
+            break;
+    }
+    return 0.0;
+}
+
+
 
 template <typename Container, typename Lambda>
 void RikiotiStudentus(Container& v, Lambda kriterijus){
@@ -529,6 +549,7 @@ void TestuotiKonteinerius(int rusiavimoPasirinkimas, string pavadinimas) {
         Bendras.clear();
     }
 }
+
  inline void PaleistiTestus(int rusiavimoPasirinkimas){
     TestuotiKonteinerius<vector<Studentas>>(rusiavimoPasirinkimas, "VEKTORIUS");
     TestuotiKonteinerius<list<Studentas>>(rusiavimoPasirinkimas, "LIST");
