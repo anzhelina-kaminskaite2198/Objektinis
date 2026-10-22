@@ -352,8 +352,40 @@ double SkaitytiIsFailo(const string& failoVardas, Container& studentai) {
     return t.PraejesLaikas();
 }
 
+
+
 template <typename Container>
-double DalytiStudentus(Container& studentai, Container& vargseliai, Container& kietuoliai) {
+double DalytiStudentus_S1(Container& studentai, Container& vargseliai, Container& kietuoliai) {
+    Laikmatis t;
+ 
+    for (auto& studentas : studentai) {
+        if (studentas.galutinisVid < 5.0) {
+            vargseliai.push_back(studentas);
+        } else {
+            kietuoliai.push_back(studentas);
+        }
+    }
+
+    return t.PraejesLaikas();
+}
+
+template <typename Container>
+double DalytiStudentus_S2(Container& studentai, Container& vargseliai, Container& kietuoliai) {
+    Laikmatis t;
+    for (auto it = studentai.begin(); it != studentai.end(); ) { 
+    if (it->galutinisVid < 5.0) {
+        vargseliai.push_back(move(*it));
+        it = studentai.erase(it);
+        } else {
+        ++it;
+        }
+    }
+
+    return t.PraejesLaikas();
+}
+
+template <typename Container>
+double DalytiStudentus_Sava(Container& studentai, Container& vargseliai, Container& kietuoliai) {
     Laikmatis t;
  
     for (auto& studentas : studentai) {
