@@ -352,13 +352,13 @@ double SkaitytiIsFailo(const string& failoVardas, Container& studentai) {
 }
 
 
-enum Strategija {Mano, S1, S2, Optimizuota};
+enum Strategija {S1, S2, Mano, Optimizuota};
 
 template <typename Container>
 double DalytiStudentus_S1(Container& studentai, Container& vargseliai, Container& kietuoliai) {
     Laikmatis t;
  
-    for (auto& studentas : studentai) {
+    for (const auto& studentas : studentai) {
         if (studentas.galutinisVid < 5.0) {
             vargseliai.push_back(studentas);
         } else {
@@ -372,15 +372,16 @@ double DalytiStudentus_S1(Container& studentai, Container& vargseliai, Container
 template <typename Container>
 double DalytiStudentus_S2(Container& studentai, Container& vargseliai, Container& kietuoliai) {
     Laikmatis t;
+
     for (auto it = studentai.begin(); it != studentai.end(); ) { 
     if (it->galutinisVid < 5.0) {
         vargseliai.push_back(move(*it));
         it = studentai.erase(it);
         } else {
-        ++it;
+            ++it;
         }
     }
-
+    kietuoliai = move(studentai); 
     return t.PraejesLaikas();
 }
 
@@ -408,11 +409,8 @@ double Dalyti(Strategija strategija, Container& studentai, Container& vargseliai
     switch (strategija) {
         case S1:
             return DalytiStudentus_S1(studentai, vargseliai, kietuoliai);
-        case S2: {
-            double t = DalytiStudentus_S2(studentai, vargseliai);
-            kietuoliai = std::move(studentai);
-            return t;
-        }
+        case S2: 
+            return DalytiStudentus_S2(studentai, vargseliai, kietuoliai);
         case Mano:
             return DalytiStudentus_Sava(studentai, vargseliai, kietuoliai);
         case Optimizuota:
@@ -474,15 +472,23 @@ void DalintiRusiuotiIrasyti(Container& studentai, int parametras) {
 template <typename Container>
 void TestuotiKonteinerius(int rusiavimoPasirinkimas, string pavadinimas) {
     const int dydziai[] = {1000, 10000, 100000, 1000000, 10000000};
+    const Strategija strategijos[] = {Mano, S1, S2, Optimizuota};
+    const string pavadinimai[]     = {"Mano", "S1", "S2", "Optimizuota"};
     const int kartai = 3;
 
     cout << fixed << setprecision(6);
     cout << "----------" << pavadinimas << "-----------";
 
-    for (int s : Strategija) {
-
+    for (Strategija s : strategijos) {
+        const string& sp = pavadinimai[s];
 
         for (int n : dydziai) {
+
+            if (s == S2 && is_same_v<Container, vector<Studentas>> && n > 100000) {
+                cout << sp << ", " << n << ": praleista (per lėta)\n\n";
+                continue;
+            }
+
             string failas = "studentai" + to_string(n) + ".txt";
             
             vector<double> Nuskaitymas;
@@ -499,14 +505,15 @@ void TestuotiKonteinerius(int rusiavimoPasirinkimas, string pavadinimas) {
 
                 double NuskaitymoLaikas = SkaitytiIsFailo(failas, studentai);
                 if (NuskaitymoLaikas < 0) { break; }
-                double DalyjimoLaikas = Dalyti(s);
+                double DalyjimoLaikas = Dalyti(s, studentai, vargseliai, kietuoliai);
                 double RusiavimoLaikas = RusiuotiStudentus(vargseliai, rusiavimoPasirinkimas)
                     + RusiuotiStudentus(kietuoliai, rusiavimoPasirinkimas);
                 double VargIrasymoLaikas;
                 double KietIrasymoLaikas;
+
                 if (n == 1000) {
-                    VargIrasymoLaikas = IrasytiStudentus(vargseliai, "vargseliai" + to_string(n) + pavadinimas + ".txt");
-                    KietIrasymoLaikas = IrasytiStudentus(kietuoliai, "kietuoliai" + to_string(n) + pavadinimas + ".txt");
+                    VargIrasymoLaikas = IrasytiStudentus(vargseliai, "vargseliai" + to_string(n) + pavadinimas + "_" + sp + ".txt");
+                    KietIrasymoLaikas = IrasytiStudentus(kietuoliai, "kietuoliai" + to_string(n) + pavadinimas + "_" + sp + ".txt");
                 } else {
                     VargIrasymoLaikas = IrasytiStudentus(vargseliai, "vargseliai" + to_string(n) + ".txt");
                     KietIrasymoLaikas = IrasytiStudentus(kietuoliai, "kietuoliai" + to_string(n) + ".txt");
@@ -536,8 +543,8 @@ void TestuotiKonteinerius(int rusiavimoPasirinkimas, string pavadinimas) {
                 return suma / laikai.size();
             };
             
-            cout << "\n      "<< n << " STUDENTU \n"
-                << "----------------------------------------" << endl;
+            cout << "\n      "<< n << " STUDENTU, strategija " << sp << "\n"
+                << "-------------------------------------------------" << endl;
 
             cout << "Nuskaitymo laiku vidurkis: " << VidurkisLaiku(Nuskaitymas)<< " s\n"
                 << "Dalijimo laiku vidurkis: " << VidurkisLaiku(Dalyjimas) << " s\n"
