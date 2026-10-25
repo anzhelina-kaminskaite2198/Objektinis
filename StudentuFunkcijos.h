@@ -451,6 +451,7 @@ double RusiuotiStudentus(Container& v, int pagal) {
     return t.PraejesLaikas();
 }
 
+
 template <typename Container>
 void DalintiRusiuotiIrasyti(Container& studentai, int parametras) {
     Container vargseliai;
@@ -473,80 +474,85 @@ void DalintiRusiuotiIrasyti(Container& studentai, int parametras) {
 template <typename Container>
 void TestuotiKonteinerius(int rusiavimoPasirinkimas, string pavadinimas) {
     const int dydziai[] = {1000, 10000, 100000, 1000000, 10000000};
- 
     const int kartai = 3;
+
     cout << fixed << setprecision(6);
     cout << "----------" << pavadinimas << "-----------";
-    for (int n : dydziai) {
-        string failas = "studentai" + to_string(n) + ".txt";
-        
-        vector<double> Nuskaitymas;
-        vector<double> Dalyjimas;
-        vector<double> Rusiavimas;
-        vector<double> VargseliuIrasymas;
-        vector<double> KietuoliuIrasymas;
-        vector<double> Bendras;
 
-        for (int k = 0; k < kartai; k++) {
-            Container studentai;
-            Container vargseliai;
-            Container kietuoliai;
+    for (int s : Strategija) {
 
-            double NuskaitymoLaikas = SkaitytiIsFailo(failas, studentai);
-            if (NuskaitymoLaikas < 0) { break; }
-            double DalyjimoLaikas = DalytiStudentus(studentai, vargseliai, kietuoliai);
-            double RusiavimoLaikas = RusiuotiStudentus(vargseliai, rusiavimoPasirinkimas)
-                  + RusiuotiStudentus(kietuoliai, rusiavimoPasirinkimas);
-            double VargIrasymoLaikas;
-            double KietIrasymoLaikas;
-            if (n == 1000) {
-                VargIrasymoLaikas = IrasytiStudentus(vargseliai, "vargseliai" + to_string(n) + pavadinimas + ".txt");
-                KietIrasymoLaikas = IrasytiStudentus(kietuoliai, "kietuoliai" + to_string(n) + pavadinimas + ".txt");
-            } else {
-                VargIrasymoLaikas = IrasytiStudentus(vargseliai, "vargseliai" + to_string(n) + ".txt");
-                KietIrasymoLaikas = IrasytiStudentus(kietuoliai, "kietuoliai" + to_string(n) + ".txt");
+
+        for (int n : dydziai) {
+            string failas = "studentai" + to_string(n) + ".txt";
+            
+            vector<double> Nuskaitymas;
+            vector<double> Dalyjimas;
+            vector<double> Rusiavimas;
+            vector<double> VargseliuIrasymas;
+            vector<double> KietuoliuIrasymas;
+            vector<double> Bendras;
+
+            for (int k = 0; k < kartai; k++) {
+                Container studentai;
+                Container vargseliai;
+                Container kietuoliai;
+
+                double NuskaitymoLaikas = SkaitytiIsFailo(failas, studentai);
+                if (NuskaitymoLaikas < 0) { break; }
+                double DalyjimoLaikas = Dalyti(s);
+                double RusiavimoLaikas = RusiuotiStudentus(vargseliai, rusiavimoPasirinkimas)
+                    + RusiuotiStudentus(kietuoliai, rusiavimoPasirinkimas);
+                double VargIrasymoLaikas;
+                double KietIrasymoLaikas;
+                if (n == 1000) {
+                    VargIrasymoLaikas = IrasytiStudentus(vargseliai, "vargseliai" + to_string(n) + pavadinimas + ".txt");
+                    KietIrasymoLaikas = IrasytiStudentus(kietuoliai, "kietuoliai" + to_string(n) + pavadinimas + ".txt");
+                } else {
+                    VargIrasymoLaikas = IrasytiStudentus(vargseliai, "vargseliai" + to_string(n) + ".txt");
+                    KietIrasymoLaikas = IrasytiStudentus(kietuoliai, "kietuoliai" + to_string(n) + ".txt");
+                }
+                
+            
+                double BendrasLaikas = NuskaitymoLaikas + DalyjimoLaikas + RusiavimoLaikas + VargIrasymoLaikas + KietIrasymoLaikas;
+
+                Nuskaitymas.push_back(NuskaitymoLaikas);
+                Dalyjimas.push_back(DalyjimoLaikas);
+                Rusiavimas.push_back(RusiavimoLaikas);
+                VargseliuIrasymas.push_back(VargIrasymoLaikas);
+                KietuoliuIrasymas.push_back(KietIrasymoLaikas);
+                Bendras.push_back(BendrasLaikas);
             }
             
-        
-            double BendrasLaikas = NuskaitymoLaikas + DalyjimoLaikas + RusiavimoLaikas + VargIrasymoLaikas + KietIrasymoLaikas;
-
-            Nuskaitymas.push_back(NuskaitymoLaikas);
-            Dalyjimas.push_back(DalyjimoLaikas);
-            Rusiavimas.push_back(RusiavimoLaikas);
-            VargseliuIrasymas.push_back(VargIrasymoLaikas);
-            KietuoliuIrasymas.push_back(KietIrasymoLaikas);
-            Bendras.push_back(BendrasLaikas);
-        }
-        
-         if (Bendras.empty()) {
-            cout << "\033[31mFailas " << failas << " nerastas.\033[0m\n\n";
-            continue;
-        }
-
-        auto VidurkisLaiku = [](const vector<double>& laikai) {
-            double suma = 0;
-            for (double laikas : laikai) {
-                suma += laikas;
+            if (Bendras.empty()) {
+                cout << "\033[31mFailas " << failas << " nerastas.\033[0m\n\n";
+                continue;
             }
-            return suma / laikai.size();
-        };
-        
-        cout << "\n      "<< n << " STUDENTU \n"
-             << "----------------------------------------" << endl;
 
-        cout << "Nuskaitymo laiku vidurkis: " << VidurkisLaiku(Nuskaitymas)<< " s\n"
-             << "Dalijimo laiku vidurkis: " << VidurkisLaiku(Dalyjimas) << " s\n"
-             << "Rusiuavimo laiku vidurkis: " << VidurkisLaiku(Rusiavimas) << " s\n"
-             << "Vargsheliu irasymo laiku vidurkis: " << VidurkisLaiku(VargseliuIrasymas) << " s\n"
-             << "Kietuoliu irasymo laiku vidurkis: " << VidurkisLaiku(KietuoliuIrasymas) << " s\n\n"
-             << "Bendras tetso laikas: " << VidurkisLaiku(Bendras) << " s\n\n";
+            auto VidurkisLaiku = [](const vector<double>& laikai) {
+                double suma = 0;
+                for (double laikas : laikai) {
+                    suma += laikas;
+                }
+                return suma / laikai.size();
+            };
+            
+            cout << "\n      "<< n << " STUDENTU \n"
+                << "----------------------------------------" << endl;
 
-        Nuskaitymas.clear();
-        Dalyjimas.clear();
-        Rusiavimas.clear();
-        VargseliuIrasymas.clear();
-        KietuoliuIrasymas.clear();
-        Bendras.clear();
+            cout << "Nuskaitymo laiku vidurkis: " << VidurkisLaiku(Nuskaitymas)<< " s\n"
+                << "Dalijimo laiku vidurkis: " << VidurkisLaiku(Dalyjimas) << " s\n"
+                << "Rusiuavimo laiku vidurkis: " << VidurkisLaiku(Rusiavimas) << " s\n"
+                << "Vargsheliu irasymo laiku vidurkis: " << VidurkisLaiku(VargseliuIrasymas) << " s\n"
+                << "Kietuoliu irasymo laiku vidurkis: " << VidurkisLaiku(KietuoliuIrasymas) << " s\n\n"
+                << "Bendras tetso laikas: " << VidurkisLaiku(Bendras) << " s\n\n";
+
+            Nuskaitymas.clear();
+            Dalyjimas.clear();
+            Rusiavimas.clear();
+            VargseliuIrasymas.clear();
+            KietuoliuIrasymas.clear();
+            Bendras.clear();
+        }
     }
 }
 
