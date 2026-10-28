@@ -373,12 +373,23 @@ template <typename Container>
 double DalytiStudentus_S2(Container& studentai, Container& vargseliai, Container& kietuoliai) {
     Laikmatis t;
 
-    for (auto it = studentai.begin(); it != studentai.end(); ) { 
-    if (it->galutinisVid < 5.0) {
-        vargseliai.push_back(move(*it));
-        it = studentai.erase(it);
-        } else {
-            ++it;
+    if constexpr (is_same_v<Container, vector<Studentas>>) {
+
+        RikiotiStudentus (studentai, [](const Studentas& a, const Studentas& b) { return a.galutinisVid > b.galutinisVid; });
+        while (!studentai.empty() && studentai.back().galutinisVid < 5.0) {
+            vargseliai.push_back(std::move(studentai.back()));
+            studentai.pop_back();
+        }
+        studentai.shrink_to_fit();
+    } else {
+
+        for (auto it = studentai.begin(); it != studentai.end(); ) { 
+        if (it->galutinisVid < 5.0) {
+            vargseliai.push_back(move(*it));
+            it = studentai.erase(it);
+            } else {
+                ++it;
+            }
         }
     }
     kietuoliai = move(studentai); 
@@ -412,13 +423,12 @@ double Dalyti(Strategija strategija, Container& studentai, Container& vargseliai
         case S2: 
             return DalytiStudentus_S2(studentai, vargseliai, kietuoliai);
         case Mano:
-            return DalytiStudentus_Sava(studentai, vargseliai, kietuoliai);
+            return DalytiStudentus_Mano(studentai, vargseliai, kietuoliai);
         case Optimizuota:
             break;
     }
     return 0.0;
 }
-
 
 
 template <typename Container, typename Lambda>
@@ -455,7 +465,7 @@ void DalintiRusiuotiIrasyti(Container& studentai, int parametras) {
     Container vargseliai;
     Container kietuoliai;
 
-    double DalyjimoLaikas = DalytiStudentus(studentai, vargseliai, kietuoliai);
+    double DalyjimoLaikas = Dalyti(Optimizuota, studentai, vargseliai, kietuoliai);
     double RusiavimoLaikas = RusiuotiStudentus(vargseliai, parametras)
                            + RusiuotiStudentus(kietuoliai, parametras);
     double VargIrasymoLaikas = IrasytiStudentus(vargseliai, "vargseliai.txt");
@@ -483,11 +493,6 @@ void TestuotiKonteinerius(int rusiavimoPasirinkimas, string pavadinimas) {
         const string& sp = pavadinimai[s];
 
         for (int n : dydziai) {
-
-            if (s == S2 && is_same_v<Container, vector<Studentas>> && n > 100000) {
-                cout << sp << ", " << n << ": praleista (per lėta)\n\n";
-                continue;
-            }
 
             string failas = "studentai" + to_string(n) + ".txt";
             
