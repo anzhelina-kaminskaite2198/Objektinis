@@ -352,8 +352,8 @@ double SkaitytiIsFailo(const string& failoVardas, Container& studentai) {
 }
 
 
-enum Strategija {S1, S2, Mano, Optimizuota};
 
+enum Strategija {S1, S2, Mano, Optimizuota};
 template <typename Container>
 double DalytiStudentus_S1(Container& studentai, Container& vargseliai, Container& kietuoliai) {
     Laikmatis t;
@@ -416,6 +416,30 @@ double DalytiStudentus_Mano(Container& studentai, Container& vargseliai, Contain
 }
 
 template <typename Container>
+double DalytiStudentus_Optimizuota( Container& studentai, Container& vargseliai, Container& kietuoliai) {
+    Laikmatis t;
+
+    if constexpr (is_same_v<Container, vector<Studentas>>) {
+        auto yraVargselis = [](const Studentas& s) { return s.galutinisVid < 5.0; };
+
+        copy_if(make_move_iterator(studentai.begin()), make_move_iterator(studentai.end()),
+                back_inserter(vargseliai), yraVargselis);
+        studentai.erase(remove_if(studentai.begin(), studentai.end(), yraVargselis), studentai.end());
+        kietuoliai = move(studentai);
+    } else {
+        for (auto it = studentai.begin(); it != studentai.end();) {
+            auto kitas = next(it);
+            if (it->galutinisVid < 5.0)
+                vargseliai.splice(vargseliai.end(), studentai, it);
+            it = kitas;
+        }
+        kietuoliai = move(studentai);
+    }
+
+    return t.PraejesLaikas();
+}
+
+template <typename Container>
 double Dalyti(Strategija strategija, Container& studentai, Container& vargseliai, Container& kietuoliai) {
     switch (strategija) {
         case S1:
@@ -429,6 +453,7 @@ double Dalyti(Strategija strategija, Container& studentai, Container& vargseliai
     }
     return 0.0;
 }
+
 
 
 template <typename Container, typename Lambda>
@@ -460,6 +485,7 @@ double RusiuotiStudentus(Container& v, int pagal) {
 }
 
 
+
 template <typename Container>
 void DalintiRusiuotiIrasyti(Container& studentai, int parametras) {
     Container vargseliai;
@@ -482,8 +508,8 @@ void DalintiRusiuotiIrasyti(Container& studentai, int parametras) {
 template <typename Container>
 void TestuotiKonteinerius(int rusiavimoPasirinkimas, string pavadinimas) {
     const int dydziai[] = {1000, 10000, 100000, 1000000, 10000000};
-    const Strategija strategijos[] = {Mano, S1, S2, Optimizuota};
-    const string pavadinimai[]     = {"Mano", "S1", "S2", "Optimizuota"};
+    const Strategija strategijos[] = {S1, S2, Mano, Optimizuota};
+    const string pavadinimai[]     = {"S1", "S2", "Mano", "Optimizuota"};
     const int kartai = 3;
 
     cout << fixed << setprecision(6);
