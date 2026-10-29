@@ -3,12 +3,10 @@
 Objektinio programavimo kurso darbas. Programa leidžia surinkti studentų namų darbų ir egzamino
 pažymius (įvedant ranka, sugeneruojant atsitiktinai arba nuskaitant iš failo) ir apskaičiuoja
 galutinį balą dviem būdais – pagal namų darbų **vidurkį** ir pagal jų **medianą**.
-Nuo v0.2 programa taip pat skirsto studentus į dvi grupes, rūšiuoja juos, rašo į failus ir
-matuoja, kiek laiko užtrunka kiekvienas veiksmas su dideliais duomenų failais.
-Nuo v0.3 visos funkcijos veikia ir su `std::vector`, ir su `std::list`, o programa palygina, kuris
-konteineris greitesnis kiekviename etape.
 
-
+- **v0.2** – studentų skirstymas į dvi grupes, rūšiavimas, rašymas į failus, laiko matavimas.
+- **v0.3** – visos funkcijos veikia ir su `std::vector`, ir su `std::list`; konteinerių palyginimas.
+- **v1.0** – trys studentų dalijimo strategijos (+ papildoma „Mano“), efektyvūs STL algoritmai, `CMakeLists.txt`.
 
 Galutinio balo formulės:
 
@@ -23,74 +21,71 @@ Galutinis balas suapvalinamas iki dviejų skaitmenų po kablelio.
 
 ## Turinys
 
-- [Reikalavimai ir paleidimas](#reikalavimai-ir-paleidimas)
+- [Diegimas ir paleidimas](#diegimas-ir-paleidimas)
 - [Projekto failai](#projekto-failai)
-- [Naudojimas](#naudojimas)
+- [Naudojimo instrukcija](#naudojimo-instrukcija)
 - [Duomenų failo formatas](#duomenų-failo-formatas)
-- [Konteinerių tyrimas (vector ir list)](#konteinerių-tyrimas-vector-ir-list)
+- [Dalijimo strategijos (v1.0)](#dalijimo-strategijos-v10)
+- [Konteinerių palyginimas: vector ir list](#konteinerių-palyginimas-vector-ir-list)
 - [Versijos (releases)](#versijos-releases)
-  - [v.pradinė](#vpradinė)
-  - [v0.1](#v01)
-  - [v0.2](#v02)
-  - [v0.3](#v03)
-  
+
 ---
 
-## Reikalavimai ir paleidimas
+## Diegimas ir paleidimas
 
-Reikia C++ kompiliatoriaus, palaikančio **C++17** (`g++`, `clang++`, MSVC). C++17 reikalingas dėl `if constexpr` ir `is_same_v`, kurie naudojami šablonuose.
+**Reikalavimai:** C++17 palaikantis kompiliatorius (`g++`, `clang++` arba MSVC) ir CMake ≥ 3.10.
+C++17 reikalingas dėl `if constexpr` ir `is_same_v`, naudojamų šablonuose.
 
-Nuo v0.3 visos studentų funkcijos yra šablonai (`StudentuFunkcijos.h`), todėl kompiliuojami tik
-du `.cpp` failai:
+### Su CMake (rekomenduojama)
 
-```bash
+```
 git clone https://github.com/anzhelina-kaminskaite2198/Objektinis.git
 cd Objektinis
-git checkout v0.3
- 
+
+cmake -S . -B build
+cmake --build build
+```
+
+Paleidimas:
+
+| Aplinka | Komanda |
+|---|---|
+| Linux / macOS / MinGW | `./build/studentai` |
+| Windows (Visual Studio generatorius) | `cmake --build build --config Release`, tada `build\Release\studentai.exe` |
+
+Pagal nutylėjimą kompiliuojama **Release** režimu (su optimizacijomis), nes tik tokiu būdu laiko
+matavimai turi prasmę. Jei Windows sistemoje CMake nerodo kompiliatoriaus (`nmake` klaida),
+nurodykite generatorių: `cmake -S . -B build -G "MinGW Makefiles"`.
+
+### Be CMake (tik g++)
+
+```
 g++ -std=c++17 -O2 main.cpp TestiniaiFailai.cpp -o studentai
 ./studentai
 ```
 
-Windows (MinGW):
-
-```powershell
-g++ -std=c++17 -O2 main.cpp TestiniaiFailai.cpp -o studentai.exe
-.\studentai.exe
-```
-
-> **Pastaba apie kompiliavimą.** Jeigu kompiliuojamas tik vienas failas (pvz.
-> `g++ TestiniaiFailai.cpp`), rodo klaidą `undefined reference to WinMain` – taip yra todėl, kad
-> tame faile nėra `main()`. Jeigu pamirštamas `TestiniaiFailai.cpp`, rodo klaidą
-> `undefined reference to SukurtiVisusTestavimoFailus()`.
-
-> **Pastaba apie kompiliavimą.** Jeigu kompiliuojamas tik vienas failas (pvz.
-> `g++ TestiniaiFailai.cpp`), rodo klaidą `undefined reference to WinMain` – taip yra todėl, kad
-> tame faile nėra `main()`. Jeigu pamirštamas `TestiniaiFailai.cpp`, rodo klaidą
-> `undefined reference to SukurtiVisusTestavimoFailus()`.
- 
-> **Pastaba apie spalvas.** Programa klaidoms paryškinti naudoja ANSI spalvų kodus (`\033[31m`). Windows
-> terminale `cmd.exe` jie gali būti rodomi kaip nesuprantami simboliai – rekomenduojama naudoti
+> **Pastaba apie spalvas.** Programa klaidoms paryškinti naudoja ANSI spalvų kodus (`\033[31m`).
+> Windows `cmd.exe` jie gali būti rodomi kaip nesuprantami simboliai – rekomenduojama naudoti
 > Windows Terminal, PowerShell 7 arba Git Bash.
-
-> **Pastaba apie laiką.** Matuojant laiką rekomenduojama kompiliuoti su `-O2`, nes be optimizacijų
-> rezultatai su dideliais failais būna gerokai lėtesni.
-
+>
+> **Pastaba apie kompiliavimą.** Jei pamirštamas `TestiniaiFailai.cpp`, rodoma klaida
+> `undefined reference to SukurtiVisusTestavimoFailus()`.
 
 ---
 
 ## Projekto failai
- 
+
 | Failas | Kas jame yra |
 |---|---|
-| `Strukturos.h` | Struktūros `Studentas`, `NeteisingiDuomenys` ir laiko matavimo struktūra `Laikmatis` (metodas `PraejesLaikas()`) |
-| `StudentuFunkcijos.h` | Visos studentų funkcijos: įvedimas, skaičiavimas, skaitymas iš failo, dalijimas, rūšiavimas, įrašymas, testų paleidimas. Daugelis jų yra šablonai (`template <typename Container>`) |
+| `CMakeLists.txt` | Projekto surinkimo aprašas (C++17, Release pagal nutylėjimą) |
+| `Strukturos.h` | Struktūros `Studentas`, `NeteisingiDuomenys` ir laiko matavimo struktūra `Laikmatis` |
+| `StudentuFunkcijos.h` | Visos studentų funkcijos: įvedimas, skaičiavimas, skaitymas iš failo, dalijimo strategijos, rūšiavimas, įrašymas, testų paleidimas (daugelis – šablonai) |
 | `TestiniaiFailai.cpp` | Atsitiktinių testinių failų kūrimas |
 | `main.cpp` | Meniu ir programos eiga |
- 
+
 ---
 
-## Naudojimas
+## Naudojimo instrukcija
 
 Paleidus programą rodomas meniu:
 
@@ -105,379 +100,286 @@ Paleidus programą rodomas meniu:
 6  Iseiti
 ```
 
-1. **Įvesti naują studentą** – prašoma vardo ir pavardės, po to galima pasirinkti, ar namų darbų
-   pažymius įvesti ranka (įvedimas baigiamas paspaudus ENTER tuščioje eilutėje), ar juos
-   sugeneruoti atsitiktinai(tuomet reikia nurodyti, kiek pažymių sugeneruoti). Tas pats pasirinkimas galioja ir egzamino pažymiui.Jeigu egzamino pažymys įvedamas ranka ir paspaudžiamas
-   tik ENTER, egzaminas laikomas lygiu 0.
-2. **Nuskaityti duomenis iš failo** – prašoma failo pavadinimo (pvz. `kursiokai.txt`).
-   Paskutinis eilutės skaičius laikomas egzamino pažymiu, visi prieš jį – namų darbais.
-   Po nuskaitymo parodomas nuskaitymo laikas, o jeigu buvo blogų įrašų – ir jų sąrašas.
-3. **Padalinti, surūšiuoti ir įrašyti studentus į failus** – pirmiausia reikia pasirinkti,
-   pagal ką rūšiuoti (pagal vardą, pagal pavardę arba pagal galutinį balą). Tada studentai
-   padalinami į dvi grupes, kiekviena grupė surūšiuojama ir įrašoma į atskirą failą.
-   Programa parodo kiekvieno žingsnio trukmę.
-4. **Sukurti testavimo failus** – sukuria 5 atsitiktinių duomenų failus (žr. [žemiau](#testiniai-failai)).
-5. **Paleisti testavimus** – pasirinkus rūšiavimo būdą, kiekvienam iš 5 failų atliekamas
-   skaitymas, dalijimas, rūšiavimas ir įrašymas **pirmiausia su `std::vector`, paskui su `std::list`**, o laikai išvedami į ekraną.
+**Rekomenduojama eiga tyrimui:** `4` (sukuria testinius failus vieną kartą) → `5` (paleidžia testus) → `6`.
+
+1. **Įvesti naują studentą** – prašoma vardo ir pavardės, tada pasirenkama, ar namų darbų pažymius
+   įvesti ranka (baigiama paspaudus ENTER tuščioje eilutėje), ar sugeneruoti atsitiktinai. Tas pats
+   pasirinkimas galioja egzaminui; jei egzaminas įvedamas ranka ir paspaudžiamas tik ENTER, jis laikomas 0.
+   Išvedamas ir studento objekto adresas atmintyje (`&studentai.back()`).
+2. **Nuskaityti duomenis iš failo** – prašoma failo pavadinimo (pvz. `kursiokai.txt`). Paskutinis
+   eilutės skaičius laikomas egzamino pažymiu, visi prieš jį – namų darbais. Parodomas nuskaitymo
+   laikas ir, jei buvo blogų įrašų, jų sąrašas.
+3. **Padalinti, surūšiuoti ir įrašyti** – pasirenkama, pagal ką rūšiuoti (vardą, pavardę ar galutinį
+   balą); studentai padalinami į dvi grupes (naudojama greičiausia strategija – `Optimizuota`),
+   kiekviena grupė surūšiuojama ir įrašoma į `vargseliai.txt` / `kietuoliai.txt`.
+   **Po šio žingsnio pradinis sąrašas tampa tuščias** – norint kartoti, duomenis reikia nuskaityti iš naujo.
+4. **Sukurti testavimo failus** – žr. [Testiniai failai](#testiniai-failai).
+5. **Paleisti testavimus** – kiekvienai strategijai, kiekvienam konteineriui (`vector`, `list`) ir
+   kiekvienam iš 5 failų atliekamas skaitymas, dalijimas, rūšiavimas ir įrašymas (3 kartai), išvedami laikų vidurkiai.
 6. **Išeiti**.
 
-### Objekto adresas atmintyje
- 
-Įvedus studentą ranka, išvedama tokia lentelė (adreso reikšmė kiekvieną kartą skirsis):
- 
-```
- Studentas sekmingai ivestas!
-Vardas         Pavarde             Galutinis (vid.)    Galutinis (med.)    Adresas
------------------------------------------------------------------------
-Vardenis       Pavardenis          8.32                8.20                0x1f3a5c2b4d0
-```
- 
-Adresas imamas iš elemento, kuris jau yra konteineryje (`&studentai.back()`), o ne iš laikino
-kintamojo, todėl jis rodo, kur studentas iš tikrųjų saugomas. Įvedus kelis studentus iš eilės galima
-pastebėti skirtumą tarp konteinerių:
- 
-- `std::vector` elementai saugomi vienas šalia kito, todėl adresai eina iš eilės; kai konteineris
-  persikelia į didesnę atminties vietą, seni adresai nebegalioja.
-- `std::list` kiekvienas elementas saugomas atskirai, todėl adresai išsibarstę ir nesikeičia.
-
-### Studentų skirstymas į grupes
- 
-Studentai skirstomi pagal galutinį balą, apskaičiuotą pagal **vidurkį**:
- 
-- galutinis < 5.0 – **vargšeliai** (įrašomi į `vargseliai.txt`)
-- galutinis ≥ 5.0 – **kietuoliai** (įrašomi į `kietuoliai.txt`)
-Dalijant studentai ne kopijuojami, o perkeliami (`std::move`) iš pradinio sąrašo į vieną iš
-dviejų naujų sąrašų. Todėl **po 3 meniu punkto pradinis studentų sąrašas tampa tuščias** – jei
-reikia pakartoti veiksmą, duomenis reikia nuskaityti iš naujo.
- 
-Jeigu 3 punktas pasirenkamas kai sąrašas tuščias, parodomas pranešimas, kad pirmiausia reikia
-įvesti arba nuskaityti studentus.
- 
-Rezultatų failo pavyzdys (`vargseliai.txt` / `kietuoliai.txt`):
-
-```
-Vardas         Pavarde             Galutinis (vid.)    Galutinis (med.)
------------------------------------------------------------------------
-Vardas1        Pavarde1            4.60                4.20
-Vardas2        Pavarde2            3.80                4.00
-```
-
-### Laiko matavimas
- 
-Laikas matuojamas su `std::chrono` (struktūra `Laikmatis`). Po 3 punkto išvedami keturi laikai:
- 
-```
-Dalijimo i dvi grupes laikas: X.XXXXXX s
-Rusiavimo laikas: X.XXXXXX s
-Vargseliu irasymo i faila laikas: X.XXXXXX s
-Kietuoliu irasymo i faila laikas: X.XXXXXX s
-```
- 
-Rūšiavimo laikas yra abiejų grupių rūšiavimo laikų suma.
- 
 ### Testiniai failai
- 
-4 meniu punktas sukuria šiuos failus:
- 
-| Failas | Studentų skaičius | Namų darbų (ND) stulpelių |
+
+| Failas | Studentų skaičius | ND stulpelių |
 |---|---|---|
 | `studentai1000.txt` | 1 000 | 3 |
 | `studentai10000.txt` | 10 000 | 4 |
 | `studentai100000.txt` | 100 000 | 5 |
 | `studentai1000000.txt` | 1 000 000 | 6 |
 | `studentai10000000.txt` | 10 000 000 | 7 |
- 
-Vardai ir pavardės sugeneruojami pagal šabloną `Vardas1`, `Pavarde1`, `Vardas2`, ... ,
-o pažymiai – atsitiktiniai sveikieji skaičiai nuo 0 iki 10. Programa išveda, kiek laiko užtruko
-sukurti kiekvieną failą. Failai sukuriami **vieną kartą** ir naudojami abiem konteineriams, kad
-palyginimas būtų sąžiningas.
- 
-> Didžiausias failas (10 mln. įrašų) kuriamas ir apdorojamas ilgai ir užima daug vietos diske.
- 
-### Testavimas (5 meniu punktas)
- 
-Funkcija `TestuotiKonteinerius<Container>()` paleidžiama du kartus: su `vector<Studentas>` ir su
-`list<Studentas>`. Kiekvienam iš 5 failų testas kartojamas **3 kartus**. Kiekvieno karto metu:
- 
-1. nuskaitomas failas `studentaiN.txt`,
-2. studentai padalinami į vargšelius ir kietuolius,
-3. abi grupės surūšiuojamos pasirinktu būdu,
-4.  grupės įrašomos į `vargseliaiN<KONTEINERIS>.txt` ir `kietuoliaiN<KONTEINERIS>.txt`
-   (pvz. `vargseliai1000VEKTORIUS.txt`, `kietuoliai1000LIST.txt`). Po 3 kartų – kiekvieno etapo laikai ir jų vidurkiai: nuskaitymo, dalijimo, rūšiavimo, vargšelių įrašymo, kietuolių įrašymo ir bendras.
- 
-```
-----------VEKTORIUS-----------
-      1000 STUDENTU
-----------------------------------------
-Nuskaitymo laiku vidurkis: X.XXXXXX s
-Dalijimo laiku vidurkis: X.XXXXXX s
-Rusiavimo laiku vidurkis: X.XXXXXX s
-Vargseliu irasymo laiku vidurkis: X.XXXXXX s
-Kietuoliu irasymo laiku vidurkis: X.XXXXXX s
- 
-Bendras testo laikas: X.XXXXXX s
-...
-----------LIST-----------
-...
-```
- 
-Jeigu reikiamo `studentaiN.txt` failo nėra, programa tai praneša ir pereina prie kito dydžio –
-todėl pirmiausia reikia paleisti 4 meniu punktą.
+
+Vardai ir pavardės: `Vardas1`, `Pavarde1`, ...; pažymiai – atsitiktiniai sveikieji nuo 0 iki 10.
+Failai sukuriami **vieną kartą** ir naudojami visiems testams, kad palyginimas būtų sąžiningas.
+Didžiausias failas (10 mln. įrašų) užima daug vietos diske ir daug RAM apdorojant (ypač S1 strategija, kuri
+laiko dvi studentų kopijas).
 
 ### Įvesties tikrinimas
 
-- Netinkamas meniu pasirinkimas (raidė vietoj skaičiaus, neegzistuojantis punktas) – srautas
-  išvalomas (`cin.clear()`, `cin.ignore()`) ir meniu rodomas iš naujo, programa nenulūžta.
-  Ta pati tikrinimo funkcija (`IvedimoKlaidos()`) naudojama visuose pasirinkimuose.
-- Pažymys turi būti skaičius intervale **[0; 10]**; kitaip rodoma klaida ir prašoma įvesti iš naujo.
-- Tekstas vietoj skaičiaus gaudomas per `stod()` metamą `std::invalid_argument` išimtį.
+- Netinkamas meniu pasirinkimas – srautas išvalomas ir meniu rodomas iš naujo (`IvedimoKlaidos()`).
+- Pažymys turi būti skaičius intervale **[0; 10]**; tekstas vietoj skaičiaus gaudomas per `std::invalid_argument`.
 - Generuojamų namų darbų skaičius negali būti neigiamas.
-- Neegzistuojantis failas – rodomas pranešimas, grįžtama į meniu.
-- Failo eilutės su blogais pažymiais į pagrindinį sąrašą nepatenka, o yra surenkamos į atskirą
-  `neteisingi` vektorių ir parodomos vartotojui.
+- Neegzistuojantis failas – parodomas pranešimas, grįžtama į meniu.
+- Eilutės su blogais pažymiais į sąrašą nepatenka, o surenkamos į `neteisingi` ir parodomos vartotojui.
 
 ---
 
 ## Duomenų failo formatas
 
-Pirma failo eilutė – antraštė (ji praleidžiama). Toliau kiekviena eilutė aprašo vieną studentą:
+Pirma eilutė – antraštė (praleidžiama). Toliau kiekviena eilutė – vienas studentas:
 
 ```
 Vardas        Pavarde        ND1   ND2   ND3   ND4   ND5   Egz.
-Vardas1        Pavarde1       8     9     7     3     3     10
-Vardas2        Pavarde2       7     6    10     5     8      9
+Vardas1       Pavarde1       8     9     7     3     3     10
 ```
 
-Namų darbų pažymių skaičius iš anksto nėra žinomas – skaitomi visi eilutėje esantys skaičiai,
-o **paskutinis** iš jų priskiriamas egzaminui. Stulpelių skaičius skirtingose eilutėse gali
-skirtis, skiriamieji simboliai – bet koks tarpų kiekis.
-
-Programos sukurti testiniai failai (`studentaiN.txt`) turi tokį patį formatą, todėl juos taip pat
-galima nuskaityti per 2 meniu punktą.
+Namų darbų skaičius iš anksto nežinomas – skaitomi visi eilutės skaičiai, **paskutinis** priskiriamas
+egzaminui. Stulpelių skaičius eilutėse gali skirtis, skirtukai – bet koks tarpų kiekis.
 
 ---
-## Konteinerių tyrimas (vector ir list)
- 
-Tyrimo tikslas – išmatuoti, kaip keičiasi programos sparta, kai studentų sąrašui saugoti vietoje
-`std::vector<Studentas>` naudojamas `std::list<Studentas>`. Kitos programos dalys nekeičiamos:
-tos pačios funkcijos (jos tapo šablonais), tie patys duomenų failai, tas pats skirstymo kriterijus.
- 
+
+## Dalijimo strategijos (v1.0)
+
+Studentai skirstomi pagal galutinį balą (pagal vidurkį): **< 5.0 – „vargšeliai“**, **≥ 5.0 – „kietuoliai“**.
+
+| Strategija | Aprašymas | `vector` | `list` |
+|---|---|---|---|
+| **S1** | Bendras konteineris skaidomas į du **naujus** konteinerius, studentai **kopijuojami** (`partition_copy`). Studentas yra dviejuose konteineriuose (bendrame ir naujame) – didžiausias atminties naudojimas. | `partition_copy` | `partition_copy` |
+| **S2** | Naudojamas tik vienas naujas konteineris („vargšeliai“); vargšeliai perkeliami į jį ir **ištrinami** iš bendro, kuriame lieka kietuoliai. | Rūšiavimas pagal balą ir `pop_back()` vargšelių | `erase` ciklu |
+| **Mano** | Vienas praėjimas, kiekvienas studentas **perkeliamas** (ne kopijuojamas) į vieną iš dviejų naujų konteinerių. | `count_if` + `reserve` + `partition_copy` su `move_iterator` | `splice` į abu konteinerius |
+| **Optimizuota (S3)** | Greičiausios strategijos (S1/S2) variantas su efektyviais STL algoritmais. | `copy_if` + `remove_if` (judinami elementai) | `splice` tik vargšelių, likęs konteineris perimamas per `move` |
+
+**Naudoti algoritmai:** `std::partition_copy`, `std::copy_if`, `std::remove_if`, `std::count_if`, `std::sort`
+(`vector`), `std::list::sort`, `std::list::splice`, `std::make_move_iterator`.
+
 ### Metodika
- 
-- Failai: `studentai1000.txt`, `studentai10000.txt`, `studentai100000.txt`,
-  `studentai1000000.txt`, `studentai10000000.txt`. Jie sugeneruoti vieną kartą ir naudojami abiem
-  konteineriams.
-- Kompiliavimas: `g++ -std=c++17 -O2`.
-- Kiekvienam failui ir konteineriui testas kartojamas **3 kartus**, lentelėse pateikiamas **vidurkis**.
-- Matuojami etapai: nuskaitymas iš failo, dalijimas į dvi grupes, rūšiavimas, vargšelių įrašymas
-  į failą, kietuolių įrašymas į failą ir bendras laikas (visų etapų suma).
-- Rūšiavimo kriterijus: **[nurodykite, kurį pasirinkote: pagal vardą / pavardę / galutinį balą]**.
-- Rūšiavimas: `vector` – `std::sort`, `list` – metodas `std::list::sort`, nes `list` neturi
-  atsitiktinės prieigos iteratorių ir `std::sort` jam netinka.
-- Dalijimas: studentai perkeliami (`std::move`) iš pradinio konteinerio į du naujus; po to
-  pradinis konteineris išvalomas (`vector` papildomai iškviečiamas `shrink_to_fit()`).
-### Testavimo sistema
- 
-| Komponentas | Reikšmė |
-|---|---|
-| Procesorius (CPU) | **[pvz. modelis, branduolių skaičius, dažnis]** |
-| Operatyvioji atmintis (RAM) | **[pvz. 16 GB]** |
-| Diskas | **[SSD arba HDD, modelis]** |
-| Operacinė sistema | **[pvz. Windows 11]** |
-| Kompiliatorius | g++ 15.2.0 (MSYS2 UCRT64), `-std=c++17 -O2` |
- 
-### Rezultatai
- 
-Visi laikai pateikti sekundėmis (3 testų vidurkis).
- 
+
+- Failai: `studentai1000.txt` ... `studentai10000000.txt`, sugeneruoti vieną kartą.
+- Kompiliavimas: **Release** (`-O2`), C++17.
+- Kiekvienam failui, konteineriui ir strategijai testas kartojamas **3 kartus**, pateikiamas **vidurkis** (sekundėmis).
+- Matuojamas **dalijimo** laikas (nuskaitymas, rūšiavimas ir rašymas nuo strategijos nepriklauso).
+- Rūšiavimo kriterijus: pagal galutinį balą.
+
+### Dalijimo laikai pagal strategijas (s, 3 testų vidurkis)
+
+Lyginamas tik **dalijimo į dvi grupes** laikas. Greičiausia strategija kiekvienoje eilutėje pažymėta **paryškintai**.
+
 **`std::vector`**
- 
-| Studentų sk. | Nuskaitymas | Dalijimas | Rūšiavimas | Vargšelių įrašymas | Kietuolių įrašymas | Bendras |
-|---:|---:|---:|---:|---:|---:|---:|
-| 1 000 | | | | | | |
-| 10 000 | | | | | | |
-| 100 000 | | | | | | |
-| 1 000 000 | | | | | | |
-| 10 000 000 | | | | | | |
- 
+
+| Studentų sk. | S1 | S2 | Mano | Optimizuota |
+|---|---|---|---|---|
+| 1 000 | 0.000167 | 0.000204 | 0.000045 | **0.000044** |
+| 10 000 | 0.002262 | 0.001675 | 0.000562 | **0.000473** |
+| 100 000 | 0.014464 | 0.020619 | 0.007101 | **0.005614** |
+| 1 000 000 | 0.168173 | 0.247601 | 0.062488 | **0.043173** |
+| 10 000 000 | 1.989825 | 2.971660 | 0.746052 | **0.511777** |
+
 **`std::list`**
- 
+
+| Studentų sk. | S1 | S2 | Mano | Optimizuota |
+|---|---|---|---|---|
+| 1 000 | 0.000137 | **0.000041** | 0.000122 | 0.000209 |
+| 10 000 | 0.001318 | **0.000481** | 0.001303 | 0.001450 |
+| 100 000 | 0.012416 | **0.005032** | 0.012993 | 0.015464 |
+| 1 000 000 | 0.139732 | **0.049388** | 0.140800 | 0.168690 |
+| 10 000 000 | 1.789229 | **0.500971** | 2.040563 | 2.085997 |
+
+### Bendras testo laikas pagal strategijas (s)
+
+Bendras laikas = nuskaitymas + dalijimas + rūšiavimas + abiejų grupių įrašymas. Kadangi nuskaitymas ir įrašymas
+nuo strategijos nepriklauso ir sudaro didžiąją dalį laiko, skirtumai čia gerokai mažesni nei dalijimo lentelėse.
+
+**`std::vector`**
+
+| Studentų sk. | S1 | S2 | Mano | Optimizuota |
+|---|---|---|---|---|
+| 1 000 | **0.011822** | 0.014239 | 0.013661 | 0.014501 |
+| 10 000 | 0.054115 | **0.035557** | 0.037854 | 0.051473 |
+| 100 000 | 0.405343 | 0.340702 | 0.338912 | **0.326282** |
+| 1 000 000 | 4.230574 | 3.929955 | 3.555266 | **3.358187** |
+| 10 000 000 | 41.879435 | 37.919924 | 35.638512 | **35.160701** |
+
+**`std::list`**
+
+| Studentų sk. | S1 | S2 | Mano | Optimizuota |
+|---|---|---|---|---|
+| 1 000 | 0.014958 | 0.013238 | 0.014065 | **0.011979** |
+| 10 000 | 0.036970 | **0.036139** | 0.040744 | 0.041223 |
+| 100 000 | **0.351997** | 0.363446 | 0.352645 | 0.367507 |
+| 1 000 000 | **3.890260** | 3.906703 | 3.975971 | 4.009171 |
+| 10 000 000 | 46.434895 | **44.811199** | 46.141458 | 46.556903 |
+
+### Atminties naudojimas (S1 ir S2)
+
+Atminties kiekis šiame tyrime **nebuvo matuojamas**, todėl skaičių nepateikiama. Teoriškai:
+
+- **S1** kopijuoja kiekvieną studentą į naują konteinerį, o bendras konteineris lieka nepakeistas, todėl dalijimo metu
+  kiekvienas studentas egzistuoja dviem kopijomis (vardas, pavardė, `vector<double>` su namų darbais) – maždaug dvigubas atminties poreikis.
+- **S2**, **Mano** ir **Optimizuota** studentus perkelia (`std::move`) arba perjungia rodykles (`splice`), todėl papildomos
+  atminties beveik nereikia.
+
+### Strategijų išvados
+
+- **`vector`:** nuo 1 000 iki 10 000 000 įrašų greičiausia dalijimo strategija – **Optimizuota** (`copy_if` su `move_iterator` +
+  `remove_if`): 10 mln. įrašų ji užtrunka 0,51 s, **Mano** – 0,75 s, S1 – 1,99 s, S2 – 2,97 s. Optimizuota apie 3,9 karto greitesnė už S1 ir apie 5,8 karto už S2.
+- **`vector`, S2:** lėčiausia nuo 100 000 įrašų. Mūsų S2 realizacija prieš dalijimą visą vektorių surūšiuoja, todėl dalijimo laikas apima ir rūšiavimą.
+  Dėl to vėlesnio rūšiavimo laikas S2 atveju yra mažesnis (10 mln.: 1,85 s prieš ~2,3–2,7 s), nes elementai jau beveik surūšiuoti –
+  tai ne konteinerio, o duomenų išdėstymo pasekmė.
+- **`list`:** greičiausia dalijimo strategija – **S2** (`erase` ciklu su `push_back(move(...))`): 10 mln. įrašų 0,50 s, o S1 – 1,79 s, Mano – 2,04 s, Optimizuota – 2,09 s.
+  Tai prieštarauja lūkesčiui, kad `splice` (tik rodyklių perjungimas) bus greičiausias. Šio rezultato priežasties čia neišsiaiškinome;
+  tikėtina, kad įtakos turi mazgų išsidėstymas atmintyje ir talpyklos (cache) praleidimai, bet tai reikėtų patikrinti profiliuojant.
+- **Bendras laikas:** `vector` atveju Optimizuota geriausia nuo 100 000 įrašų (10 mln.: 35,16 s prieš 41,88 s su S1, t. y. ~16 % greičiau).
+  `list` atveju skirtumai tarp strategijų yra 1–4 % (10 mln.: 44,8–46,6 s), todėl jie panašūs į matavimo paklaidą.
+- **Rekomendacija:** `vector` + **Optimizuota** yra greičiausias derinys (10 mln. įrašų – 35,16 s); jei būtinas `list`, verta naudoti **S2**.
+
+---
+
+## Konteinerių palyginimas: vector ir list
+
+Tyrimo tikslas – išmatuoti, kaip keičiasi sparta, kai studentams saugoti vietoje `std::vector` naudojamas `std::list`.
+Visos funkcijos – šablonai, naudojami tie patys failai ir tas pats rūšiavimo kriterijus (pagal galutinį balą).
+Rūšiavimas: `vector` – `std::sort`, `list` – `std::list::sort`. Metodika aprašyta skyriuje
+[Dalijimo strategijos](#dalijimo-strategijos-v10).
+
+Lyginamos **visų etapų** trukmės (nuskaitymas, dalijimas, rūšiavimas, abiejų grupių įrašymas) su **Optimizuota** strategija,
+nes ją programa naudoja realiai (3 meniu punktas).
+
+### Rezultatai (s, 3 testų vidurkis)
+
+**`std::vector`**
+
 | Studentų sk. | Nuskaitymas | Dalijimas | Rūšiavimas | Vargšelių įrašymas | Kietuolių įrašymas | Bendras |
-|---:|---:|---:|---:|---:|---:|---:|
-| 1 000 | | | | | | |
-| 10 000 | | | | | | |
-| 100 000 | | | | | | |
-| 1 000 000 | | | | | | |
-| 10 000 000 | | | | | | |
- 
-### Palyginimas
- 
-Santykis rodo, kiek kartų `list` lėtesnis (>1) arba greitesnis (<1) už `vector`
-(`list laikas / vector laikas`).
- 
+|---|---|---|---|---|---|---|
+| 1 000 | 0.001881 | 0.000044 | 0.000130 | 0.010742 | 0.001704 | 0.014501 |
+| 10 000 | 0.021001 | 0.000473 | 0.001228 | 0.019679 | 0.009091 | 0.051473 |
+| 100 000 | 0.157542 | 0.005614 | 0.014289 | 0.076373 | 0.072466 | 0.326282 |
+| 1 000 000 | 1.923079 | 0.043173 | 0.192033 | 0.590214 | 0.609687 | 3.358187 |
+| 10 000 000 | 20.968560 | 0.511777 | 2.286842 | 5.678227 | 5.715295 | 35.160701 |
+
+**`std::list`**
+
 | Studentų sk. | Nuskaitymas | Dalijimas | Rūšiavimas | Vargšelių įrašymas | Kietuolių įrašymas | Bendras |
-|---:|---:|---:|---:|---:|---:|---:|
-| 1 000 | | | | | | |
-| 10 000 | | | | | | |
-| 100 000 | | | | | | |
-| 1 000 000 | | | | | | |
-| 10 000 000 | | | | | | |
- 
-**Grafikai ir ekrano nuotraukos**
- 
-<!-- Įdėkite savo nuotraukas į aplanką img/ ir atkomentuokite -->
-<!--
-![Bendras laikas: vector ir list](img/bendras_laikas.png)
-![Rūšiavimo laikas](img/rusiavimas.png)
-![Testų išvestis](img/testu_isvestis.png)
-![Objekto adresai: vector](img/adresai_vector.png)
-![Objekto adresai: list](img/adresai_list.png)
--->
- 
+|---|---|---|---|---|---|---|
+| 1 000 | 0.001987 | 0.000209 | 0.000068 | 0.008262 | 0.001452 | 0.011979 |
+| 10 000 | 0.016906 | 0.001450 | 0.000871 | 0.012275 | 0.009721 | 0.041223 |
+| 100 000 | 0.175251 | 0.015464 | 0.024357 | 0.077817 | 0.074619 | 0.367507 |
+| 1 000 000 | 1.973327 | 0.168690 | 0.560189 | 0.662862 | 0.644103 | 4.009171 |
+| 10 000 000 | 22.041852 | 2.085997 | 9.885684 | 6.236710 | 6.306659 | 46.556903 |
+
+### Palyginimas (list laikas / vector laikas)
+
+Reikšmė > 1 reiškia, kad `list` lėtesnis, < 1 – greitesnis.
+
+| Studentų sk. | Nuskaitymas | Dalijimas | Rūšiavimas | Vargšelių įrašymas | Kietuolių įrašymas | Bendras |
+|---|---|---|---|---|---|---|
+| 1 000 | 1.06 | 4.75 | 0.52 | 0.77 | 0.85 | 0.83 |
+| 10 000 | 0.81 | 3.07 | 0.71 | 0.62 | 1.07 | 0.80 |
+| 100 000 | 1.11 | 2.75 | 1.70 | 1.02 | 1.03 | 1.13 |
+| 1 000 000 | 1.03 | 3.91 | 2.92 | 1.12 | 1.06 | 1.19 |
+| 10 000 000 | 1.05 | 4.08 | 4.32 | 1.10 | 1.10 | 1.32 |
+
+### Palyginimas pagal strategijas (list laikas / vector laikas)
+
+**Dalijimo laikas**
+
+| Studentų sk. | S1 dalijimas | S2 dalijimas | Mano dalijimas | Optimizuota dalijimas |
+|---|---|---|---|---|
+| 1 000 | 0.82 | 0.20 | 2.71 | 4.75 |
+| 10 000 | 0.58 | 0.29 | 2.32 | 3.07 |
+| 100 000 | 0.86 | 0.24 | 1.83 | 2.75 |
+| 1 000 000 | 0.83 | 0.20 | 2.25 | 3.91 |
+| 10 000 000 | 0.90 | 0.17 | 2.74 | 4.08 |
+
+**Bendras laikas**
+
+| Studentų sk. | S1 bendras | S2 bendras | Mano bendras | Optimizuota bendras |
+|---|---|---|---|---|
+| 1 000 | 1.27 | 0.93 | 1.03 | 0.83 |
+| 10 000 | 0.68 | 1.02 | 1.08 | 0.80 |
+| 100 000 | 0.87 | 1.07 | 1.04 | 1.13 |
+| 1 000 000 | 0.92 | 0.99 | 1.12 | 1.19 |
+| 10 000 000 | 1.11 | 1.18 | 1.29 | 1.32 |
+
 ### Išvados
- 
-> Šią dalį reikia užpildyti pagal gautus skaičius. Žemiau – klausimai, į kuriuos verta atsakyti,
-> ir hipotezės, kurias galima patikrinti.
- 
-- **Bendras greitis:** kuris konteineris greitesnis bendrai ir ar skirtumas didėja augant failui?
-  **[...]**
-- **Nuskaitymas:** `vector` elementai sudedami į vientisą atminties bloką (kartais persikeliant į
-  didesnį), o `list` kiekvienam elementui skiriamas atskiras mazgas. **[kaip tai atsispindi
-  rezultatuose?]**
-- **Dalijimas:** abiem atvejais elementai perkeliami `push_back(move(...))`, bet `list` kiekvienam
-  elementui vis tiek sukuria naują mazgą. **[ar skirtumas pastebimas?]**
-- **Rūšiavimas:** `vector` naudoja `std::sort`, `list` – savo `sort` metodą. **[kuris greitesnis
-  ir kuriame dydyje?]**
-- **Įrašymas į failą:** įrašymo logika vienoda abiems konteineriams, todėl skirtumas turėtų būti
-  mažas; didesnis skirtumas rodytų, kad svarbu, kaip elementai išdėstyti atmintyje. **[ką
-  parodė matavimai?]**
-- **Atmintis:** ar 10 mln. įrašų testas pavyko su abiem konteineriais? **[jei ne – aprašykite, kas
-  nutiko]**
+
+- **Nuskaitymas ir įrašymas į failą:** santykis artimas 1 (0,62–1,12), nes darbą daugiausia lemia failo skaitymas ir rašymas, o ne konteineris.
+- **Rūšiavimas:** mažuose failuose (iki 10 000) `list::sort` panašus ar net greitesnis, bet nuo 100 000 įrašų `list` lėtėja: 100 000 – 1,7 karto,
+  1 mln. – 2,9 karto, 10 mln. – 4,3 karto (9,89 s prieš 2,29 s). `list` mazgai išsibarstę atmintyje, todėl blogai išnaudojama talpykla (cache).
+- **Dalijimas su Optimizuota strategija:** `list` lėtesnis 2,8–4,8 karto. Tačiau tai priklauso nuo strategijos: su S2 `list` yra **greitesnis**
+  (`list`/`vector` = 0,17–0,29), nes `vector` S2 realizacija lėta (rūšiavimas prieš dalijimą), o `list` trynimas yra pigus.
+- **Bendras laikas:** iki 10 000 įrašų skirtumai yra milisekundžių dalys ir tikėtinai paklaida (list formaliai greitesnis, 0,80–0,83). Nuo 100 000 įrašų
+  `list` lėtesnis: 1,13 → 1,19 → 1,32 karto (10 mln.: 46,56 s prieš 35,16 s).
+- **Pagal strategijas:** didžiausias bendras skirtumas tarp konteinerių – su Optimizuota (1,32) ir Mano (1,29), mažiausias – su S1 (1,11),
+  nes S1 `vector` atveju lėčiausia (kopijavimas), tad `list` atsilieka mažiau.
+- **Atmintis:** 10 mln. įrašų testas pavyko su abiem konteineriais ir visomis strategijomis.
+
 ---
 
 ## Versijos (releases)
 
-Kiekviena versija turi atskirą žymą (tag) ir atskirą release'ą GitHub'e.
-
 | Versija | Šaka | Trumpai |
 |---|---|---|
-| [`v.pradinė`](https://github.com/anzhelina-kaminskaite2198/Objektinis/releases) | `v.pradine` | Duomenų įvedimas ranka ir generavimas, vidurkis ir mediana, rezultatų lentelė |
-| [`v0.1`](https://github.com/anzhelina-kaminskaite2198/Objektinis/releases) | `v0.1` | Skaitymas iš failo, blogų įrašų atmetimas, dalinė didelių sąrašų išvestis |
-| [`v0.2`](https://github.com/anzhelina-kaminskaite2198/Objektinis/releases) | `v0.2` | Studentų dalijimas į dvi grupes, rūšiavimo pasirinkimas, rašymas į failus, testiniai failai ir laiko matavimas |
-| [`v0.3`](https://github.com/anzhelina-kaminskaite2198/Objektinis/releases) | `v0.3` | Funkcijos paverstos šablonais, veikia su `vector` ir `list`, objekto adreso išvedimas, konteinerių spartos palyginimas |
+| `v.pradinė` | `v.pradine` | Įvedimas ranka ir generavimas, vidurkis ir mediana, rezultatų lentelė |
+| `v0.1` | `v0.1` | Skaitymas iš failo, blogų įrašų atmetimas, dalinė didelių sąrašų išvestis |
+| `v0.2` | `v0.2` | Dalijimas į dvi grupes, rūšiavimo pasirinkimas, rašymas į failus, testiniai failai, laiko matavimas |
+| `v0.3` | `v0.3` | Šablonai, `vector` ir `list`, objekto adresas, konteinerių spartos palyginimas |
+| `v1.0` | `v1.0` | Dalijimo strategijos S1, S2, Mano, Optimizuota; efektyvūs STL algoritmai; `CMakeLists.txt`; pilnas README |
 
 ### v.pradinė
 
-Pirmoji veikianti programos versija.
-
-**Funkcionalumas**
-
-- Struktūra `Studentas` (vardas, pavardė, `vector<double> namuDarbai`, egzaminas) ir globalus
-  `vector<Studentas> studentai`.
-- Namų darbų pažymių skaičius nėra žinomas iš anksto – jis nustatomas įvedimo metu, įvedimas
-  baigiamas tuščia eilute.
-- Galimybė atsitiktinai sugeneruoti tiek namų darbų, tiek egzamino pažymius (`rand()`).
-- Galutinio balo skaičiavimas pagal vidurkį (`Vidurkis()`) ir pagal medianą (`Mediana()`),
-  rezultatas suapvalinamas iki dviejų skaitmenų po kablelio.
-- Rezultatų išvedimas sulygiuota lentele naudojant `<iomanip>` (`setw`, `left`, `fixed`,
-  `setprecision`).
-- Įvesties klaidų tikrinimas (ne skaičius, pažymys ne intervale [0; 10], netinkamas meniu punktas).
-- Funkcijos suskirstytos pagal atsakomybes: `IvestiStudenta()`, `ParodytiStudentus()`,
-  `Vidurkis()`, `Mediana()`.
-
-**Apribojimai**
-
-- Duomenis galima įvesti tik ranka arba sugeneruoti – failų skaitymo nėra.
-- Visas sąrašas visada išvedamas iš karto, todėl su dideliu kiekiu studentų išvestis
-  tampa neperskaitoma.
+Pirmoji veikianti versija: struktūra `Studentas`, `vector<Studentas>`, įvedimas ranka arba
+atsitiktinis generavimas (`rand()`), galutinis balas pagal vidurkį ir medianą, lentelės išvedimas (`<iomanip>`),
+įvesties klaidų tikrinimas. Failų skaitymo nebuvo, o visas sąrašas visada buvo išvedamas iš karto.
 
 ### v0.1
 
-**Kas nauja, palyginti su `v.pradinė`**
-
-- **Duomenų skaitymas iš failo** (`SkaitytiIsFailo()`): vartotojas pats nurodo failo pavadinimą,
-  tad programa nėra pririšta prie vieno konkretaus failo. Eilutė skaidoma per `stringstream`,
-  paskutinis skaičius traktuojamas kaip egzaminas.
-- **Blogų įrašų atmetimas**: pridėta struktūra `NeteisingiDuomenys` ir vektorius `neteisingi`.
-  Studentas, kurio eilutėje yra netinkamas pažymys, į skaičiavimus nepatenka, bet jo vardas ir
-  pavardė parodomi vartotojui – duomenys nėra tyliai prarandami.
-- **Dalinė išvestis** (`RodytiDaliStudentu()`): kai sąraše daugiau nei 40 studentų, siūloma
-  išvesti tik pirmus 20 ir paskutinius 20 įrašų. Tai atsirado būtent po efektyvumo tyrimų su
-  dideliais failais, kai pilnos lentelės spausdinimas į terminalą užtruko ilgiau nei patys
-  skaičiavimai.
-- **Rikiavimas pagal vardą** prieš išvedimą (`std::sort` su lambda funkcija).
-- Pridėtas `.gitignore` (kompiliuoti failai, bandomieji `.cpp`, dideli sugeneruoti duomenų failai).
-- Pridėtas testinis failas `kursiokai.txt` su specialiai įterptomis klaidomis.
-- Ištaisytos įvedimo klaidos: srauto valymas po `cin.fail()`, nebelieka „prašokamų" `getline()`
-  kvietimų po `cin >>`.
+- Skaitymas iš failo (`SkaitytiIsFailo()`), paskutinis skaičius – egzaminas.
+- Blogų įrašų atmetimas (`NeteisingiDuomenys`, `neteisingi`).
+- Dalinė išvestis, kai studentų daugiau nei 40 (pirmi ir paskutiniai 20); rikiavimas pagal vardą.
+- Pridėtas `.gitignore`, testinis failas `kursiokai.txt` su įterptomis klaidomis, ištaisytos įvedimo klaidos.
 
 ### v0.2
- 
-Šioje versijoje programa pritaikyta darbui su dideliais duomenų kiekiais ir jų apdorojimo
-spartos matavimui.
- 
-**Kas nauja, palyginti su `v0.1`**
- 
-- **Kodas išskaidytas į kelis failus**: struktūros perkeltos į `Strukturos.h`, funkcijos į
-  `StudentuFunkcijos.h/.cpp`, testinių failų kūrimas – į `TestiniaiFailai.cpp`, o `main.cpp`
-  liko tik meniu. Dabar programą reikia kompiliuoti iš visų `.cpp` failų.
-- **Studentų dalijimas į dvi grupes** (`DalytiStudentus()`): studentai, kurių galutinis balas
-  (pagal vidurkį) mažesnis nei 5, patenka į „vargšelius", likusieji – į „kietuolius".
-  Studentai perkeliami (`std::move`), o ne kopijuojami, o pradinis sąrašas po dalijimo
-  išvalomas.
-- **Rūšiavimo pasirinkimas** (`PasirinktiRusiavimoParametra()`, `RusiuotiStudentus()`):
-  galima rūšiuoti pagal vardą, pavardę arba galutinį balą (pagal vidurkį). Naudojamas
-  `std::sort` su lambda funkcijomis.
-- **Rezultatų rašymas į failus** (`IrasytiStudentus()`): vargšeliai įrašomi į `vargseliai.txt`,
-  kietuoliai – į `kietuoliai.txt`, abu su sulygiuotomis stulpelių antraštėmis.
-- **Testinių failų kūrimas** (`SukurtiTestavimoFailus()`, `SukurtiVisusTestavimoFailus()`):
-  sugeneruojami failai su 1 tūkst., 10 tūkst., 100 tūkst., 1 mln. ir 10 mln. įrašų.
-- **Spartos testavimas** (`PaleistiTestus()`): kiekvienas failas apdorojamas 3 kartus, o
-  nuskaitymo, dalijimo, rūšiavimo ir įrašymo laikai bei jų vidurkiai išvedami į ekraną.
-- **Laiko matavimas** su `std::chrono` – struktūra `Laikmatis` naudojama visose funkcijose,
-  kurios grąžina savo vykdymo trukmę sekundėmis.
-- **Galutiniai balai skaičiuojami vieną kartą**: struktūroje `Studentas` pridėti laukai
-  `galutinisVid` ir `galutinisMed`, kurie užpildomi nuskaitant arba įvedant studentą, tad
-  rūšiuojant ir rašant į failus nebereikia skaičiuoti iš naujo.
-- **Atsitiktiniai skaičiai** generuojami su `mt19937` ir `uniform_real_distribution`
-  vietoje `rand()`.
-- **Viena klaidų tikrinimo funkcija** `IvedimoKlaidos()` naudojama visuose meniu pasirinkimuose.
-**Kas pasikeitė**
- 
-- Pašalintas meniu punktas „Rodyti studentus" ir dalinė išvestis (`RodytiDaliStudentu()`):
-  rezultatai dabar rašomi į failus, o ne spausdinami į ekraną. Dėl šios priežasties nebereikalingas
-  ir rūšiavimas pagal vardą prieš išvedimą – rūšiavimo būdą pasirenka pats vartotojas.
+
+- Kodas išskaidytas į `Strukturos.h`, `StudentuFunkcijos.h`, `TestiniaiFailai.cpp`, `main.cpp`.
+- Dalijimas į „vargšelius“ ir „kietuolius“ (`std::move`), rūšiavimo pasirinkimas, rašymas į `vargseliai.txt` / `kietuoliai.txt`.
+- Testinių failų kūrimas (1 tūkst. – 10 mln.), spartos testavimas (3 kartai), `Laikmatis` su `std::chrono`.
+- Galutiniai balai skaičiuojami vieną kartą (`galutinisVid`, `galutinisMed`), `mt19937` vietoje `rand()`.
+- Pašalinta dalinė išvestis – rezultatai rašomi į failus.
 
 ### v0.3
- 
-Šioje versijoje tiriama, kaip programos sparta priklauso nuo studentų saugojimui naudojamo
-konteinerio (`std::vector` ar `std::list`).
- 
-**Kas nauja, palyginti su `v0.2`**
- 
-- **Funkcijos paverstos šablonais** (`template <typename Container>`): `IvestiStudenta`,
-  `IrasytiStudentus`, `SkaitytiIsFailo`, `DalytiStudentus`, `RusiuotiStudentus` ir
-  `TestuotiKonteinerius` dabar veikia su bet kuriuo iš dviejų konteinerių, todėl nereikia dviejų
-  kodo kopijų ir palyginimas sąžiningas – keičiasi tik konteineris.
-- **Skirtingas rūšiavimas** (`RikiotiStudentus`): su `if constexpr` pasirenkama, ar kviesti
-  `std::sort` (`vector`), ar `list::sort` (`list`). Panašiai `shrink_to_fit()` kviečiamas tik
-  `vector`, nes `list` tokio metodo neturi.
-- **Objekto adreso išvedimas**: įvedus studentą ranka, kartu su jo duomenimis išvedamas ir adresas
-  atmintyje (`&studentai.back()`), tiek `vector`, tiek `list` atveju.
-- **Abiejų konteinerių testavimas vienu paleidimu**: `PaleistiTestus()` iš eilės paleidžia
-  testus su `vector` ir `list`, naudodama tuos pačius anksčiau sugeneruotus failus. Rezultatų
-  failai skiriasi pavadinimu (`...VEKTORIUS.txt`, `...LIST.txt`), kad vieni kitų neperrašytų.
-- **Kodo struktūra**: šablonai turi būti matomi kompiliatoriui, todėl funkcijų realizacijos
-  perkeltos į `StudentuFunkcijos.h`; ne šablonų funkcijos ir globalūs kintamieji (`rd`, `gen`,
-  `neteisingi`) pažymėti `inline`, kad nekiltų `multiple definition` klaidų. Dabar reikia
-  kompiliuoti tik `main.cpp` ir `TestiniaiFailai.cpp`.
-- **`Laikmatis`** perkeltas į `Strukturos.h`, jo metodas pervadintas į `PraejesLaikas()`.
-- **README**: pridėtas konteinerių tyrimas su testavimo sistemos aprašu, lentelėmis ir išvadomis.
-**Apribojimai**
- 
-- Po dalijimo (3 meniu punktas) pradinis konteineris išvalomas, todėl duomenis reikia nuskaityti iš
-  naujo.
-- `RikiotiStudentus` palaiko tik `vector<Studentas>` ir `list<Studentas>`; kitam konteineriui
-  rūšiavimas neveiktų.
 
----
+- Funkcijos paverstos šablonais (`template <typename Container>`), veikia su `vector` ir `list`.
+- `if constexpr` pasirenka `std::sort` arba `list::sort`; `shrink_to_fit()` tik `vector`.
+- Objekto adreso išvedimas, abiejų konteinerių testavimas vienu paleidimu.
+- Realizacijos perkeltos į `StudentuFunkcijos.h`, ne šablonų funkcijos ir globalūs kintamieji pažymėti `inline`.
+- Konteinerių tyrimas (žr. aukščiau).
+
+### v1.0
+
+- Realizuotos strategijos **S1**, **S2**, **Mano** ir **Optimizuota** abiem konteineriams (žr. [Dalijimo strategijos](#dalijimo-strategijos-v10)).
+- Naudojami efektyvūs algoritmai (`partition_copy`, `copy_if`, `remove_if`, `count_if`, `splice`).
+- Testų paleidimas lygina visas strategijas su abiem konteineriais, 3 kartų vidurkis, ankstesnis failų generavimas.
+- Pridėtas `CMakeLists.txt` (C++17, Release pagal nutylėjimą) ir diegimo instrukcija.
+- README papildytas lentelėmis ir išvadomis.
+
+**Apribojimai:** po dalijimo pradinis konteineris išvalomas; `RikiotiStudentus` palaiko tik `vector<Studentas>` ir `list<Studentas>`;
+10 mln. įrašų testui reikia kelių GB RAM (ypač S1).
