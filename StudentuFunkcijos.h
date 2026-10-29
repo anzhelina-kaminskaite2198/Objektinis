@@ -427,14 +427,11 @@ double DalytiStudentus_Optimizuota( Container& studentai, Container& vargseliai,
         studentai.erase(remove_if(studentai.begin(), studentai.end(), yraVargselis), studentai.end());
         kietuoliai = move(studentai);
     } else {
-        for (auto it = studentai.begin(); it != studentai.end();) {
-            auto kitas = next(it);
-            if (it->galutinisVid < 5.0)
-                vargseliai.splice(vargseliai.end(), studentai, it);
-            it = kitas;
-        }
-        kietuoliai = move(studentai);
-    }
+        partition_copy(studentai.begin(), studentai.end(),
+        back_inserter(vargseliai), back_inserter(kietuoliai),
+        [](const Studentas& s) { return s.galutinisVid < 5.0; });
+        }   
+    
 
     return t.PraejesLaikas();
 }
@@ -449,7 +446,7 @@ double Dalyti(Strategija strategija, Container& studentai, Container& vargseliai
         case Mano:
             return DalytiStudentus_Mano(studentai, vargseliai, kietuoliai);
         case Optimizuota:
-            break;
+            return DalytiStudentus_Optimizuota(studentai, vargseliai, kietuoliai);;
     }
     return 0.0;
 }
