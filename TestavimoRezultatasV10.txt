@@ -1,0 +1,455 @@
+              MENIU
+-----------------------------------
+1  Ivesti nauja studenta
+2  Nuskaityti duomenis is failo
+3  Padalinti, surusiuoti ir irasyti studentus i failus
+4  Sukurti testavimo failus (5 failai)
+5  Paleisti testavimus (5 failai)
+6  Iseiti
+
+Pasirinkite veiksma: 5
+
+Pagal ka rusiuoti studentus?
+1  Pagal varda
+2  Pagal pavarde
+3  Pagal galutini bala
+3
+----------VEKTORIUS-----------
+      1000 STUDENTU, strategija S1
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 0.002271 s
+Dalijimo laiku vidurkis: 0.000167 s
+Rusiuavimo laiku vidurkis: 0.000137 s
+Vargsheliu irasymo laiku vidurkis: 0.006988 s
+Kietuoliu irasymo laiku vidurkis: 0.002260 s
+
+Bendras tetso laikas: 0.011822 s
+
+
+      10000 STUDENTU, strategija S1
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 0.026413 s
+Dalijimo laiku vidurkis: 0.002262 s
+Rusiuavimo laiku vidurkis: 0.001547 s
+Vargsheliu irasymo laiku vidurkis: 0.013204 s
+Kietuoliu irasymo laiku vidurkis: 0.010689 s
+
+Bendras tetso laikas: 0.054115 s
+
+
+      100000 STUDENTU, strategija S1
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 0.194357 s
+Dalijimo laiku vidurkis: 0.014464 s
+Rusiuavimo laiku vidurkis: 0.016146 s
+Vargsheliu irasymo laiku vidurkis: 0.090678 s
+Kietuoliu irasymo laiku vidurkis: 0.089698 s
+
+Bendras tetso laikas: 0.405343 s
+
+
+      1000000 STUDENTU, strategija S1
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 2.071763 s
+Dalijimo laiku vidurkis: 0.168173 s
+Rusiuavimo laiku vidurkis: 0.288870 s
+Vargsheliu irasymo laiku vidurkis: 0.939132 s
+Kietuoliu irasymo laiku vidurkis: 0.762636 s
+
+Bendras tetso laikas: 4.230574 s
+
+
+      10000000 STUDENTU, strategija S1
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 25.050604 s
+Dalijimo laiku vidurkis: 1.989825 s
+Rusiuavimo laiku vidurkis: 2.727158 s
+Vargsheliu irasymo laiku vidurkis: 5.927023 s
+Kietuoliu irasymo laiku vidurkis: 6.184825 s
+
+Bendras tetso laikas: 41.879435 s
+
+
+      1000 STUDENTU, strategija S2
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 0.004272 s
+Dalijimo laiku vidurkis: 0.000204 s
+Rusiuavimo laiku vidurkis: 0.000061 s
+Vargsheliu irasymo laiku vidurkis: 0.008277 s
+Kietuoliu irasymo laiku vidurkis: 0.001425 s
+
+Bendras tetso laikas: 0.014239 s
+
+
+      10000 STUDENTU, strategija S2
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 0.015252 s
+Dalijimo laiku vidurkis: 0.001675 s
+Rusiuavimo laiku vidurkis: 0.000692 s
+Vargsheliu irasymo laiku vidurkis: 0.010630 s
+Kietuoliu irasymo laiku vidurkis: 0.007308 s
+
+Bendras tetso laikas: 0.035557 s
+
+
+      100000 STUDENTU, strategija S2
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 0.156232 s
+Dalijimo laiku vidurkis: 0.020619 s
+Rusiuavimo laiku vidurkis: 0.009461 s
+Vargsheliu irasymo laiku vidurkis: 0.076896 s
+Kietuoliu irasymo laiku vidurkis: 0.077494 s
+
+Bendras tetso laikas: 0.340702 s
+
+
+      1000000 STUDENTU, strategija S2
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 2.134982 s
+Dalijimo laiku vidurkis: 0.247601 s
+Rusiuavimo laiku vidurkis: 0.152882 s
+Vargsheliu irasymo laiku vidurkis: 0.679421 s
+Kietuoliu irasymo laiku vidurkis: 0.715069 s
+
+Bendras tetso laikas: 3.929955 s
+
+
+      10000000 STUDENTU, strategija S2
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 21.581492 s
+Dalijimo laiku vidurkis: 2.971660 s
+Rusiuavimo laiku vidurkis: 1.853326 s
+Vargsheliu irasymo laiku vidurkis: 5.676972 s
+Kietuoliu irasymo laiku vidurkis: 5.836475 s
+
+Bendras tetso laikas: 37.919924 s
+
+
+      1000 STUDENTU, strategija Mano
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 0.001590 s
+Dalijimo laiku vidurkis: 0.000045 s
+Rusiuavimo laiku vidurkis: 0.000109 s
+Vargsheliu irasymo laiku vidurkis: 0.007391 s
+Kietuoliu irasymo laiku vidurkis: 0.004526 s
+
+Bendras tetso laikas: 0.013661 s
+
+
+      10000 STUDENTU, strategija Mano
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 0.016671 s
+Dalijimo laiku vidurkis: 0.000562 s
+Rusiuavimo laiku vidurkis: 0.001089 s
+Vargsheliu irasymo laiku vidurkis: 0.009276 s
+Kietuoliu irasymo laiku vidurkis: 0.010257 s
+
+Bendras tetso laikas: 0.037854 s
+
+
+      100000 STUDENTU, strategija Mano
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 0.157361 s
+Dalijimo laiku vidurkis: 0.007101 s
+Rusiuavimo laiku vidurkis: 0.014323 s
+Vargsheliu irasymo laiku vidurkis: 0.078479 s
+Kietuoliu irasymo laiku vidurkis: 0.081647 s
+
+Bendras tetso laikas: 0.338912 s
+
+
+      1000000 STUDENTU, strategija Mano
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 1.958900 s
+Dalijimo laiku vidurkis: 0.062488 s
+Rusiuavimo laiku vidurkis: 0.195914 s
+Vargsheliu irasymo laiku vidurkis: 0.691690 s
+Kietuoliu irasymo laiku vidurkis: 0.646275 s
+
+Bendras tetso laikas: 3.555266 s
+
+
+      10000000 STUDENTU, strategija Mano
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 21.111717 s
+Dalijimo laiku vidurkis: 0.746052 s
+Rusiuavimo laiku vidurkis: 2.291502 s
+Vargsheliu irasymo laiku vidurkis: 5.744278 s
+Kietuoliu irasymo laiku vidurkis: 5.744963 s
+
+Bendras tetso laikas: 35.638512 s
+
+
+      1000 STUDENTU, strategija Optimizuota
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 0.001881 s
+Dalijimo laiku vidurkis: 0.000044 s
+Rusiuavimo laiku vidurkis: 0.000130 s
+Vargsheliu irasymo laiku vidurkis: 0.010742 s
+Kietuoliu irasymo laiku vidurkis: 0.001704 s
+
+Bendras tetso laikas: 0.014501 s
+
+
+      10000 STUDENTU, strategija Optimizuota
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 0.021001 s
+Dalijimo laiku vidurkis: 0.000473 s
+Rusiuavimo laiku vidurkis: 0.001228 s
+Vargsheliu irasymo laiku vidurkis: 0.019679 s
+Kietuoliu irasymo laiku vidurkis: 0.009091 s
+
+Bendras tetso laikas: 0.051473 s
+
+
+      100000 STUDENTU, strategija Optimizuota
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 0.157542 s
+Dalijimo laiku vidurkis: 0.005614 s
+Rusiuavimo laiku vidurkis: 0.014289 s
+Vargsheliu irasymo laiku vidurkis: 0.076373 s
+Kietuoliu irasymo laiku vidurkis: 0.072466 s
+
+Bendras tetso laikas: 0.326282 s
+
+
+      1000000 STUDENTU, strategija Optimizuota
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 1.923079 s
+Dalijimo laiku vidurkis: 0.043173 s
+Rusiuavimo laiku vidurkis: 0.192033 s
+Vargsheliu irasymo laiku vidurkis: 0.590214 s
+Kietuoliu irasymo laiku vidurkis: 0.609687 s
+
+Bendras tetso laikas: 3.358187 s
+
+
+      10000000 STUDENTU, strategija Optimizuota
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 20.968560 s
+Dalijimo laiku vidurkis: 0.511777 s
+Rusiuavimo laiku vidurkis: 2.286842 s
+Vargsheliu irasymo laiku vidurkis: 5.678227 s
+Kietuoliu irasymo laiku vidurkis: 5.715295 s
+
+Bendras tetso laikas: 35.160701 s
+
+----------LIST-----------
+      1000 STUDENTU, strategija S1
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 0.001728 s
+Dalijimo laiku vidurkis: 0.000137 s
+Rusiuavimo laiku vidurkis: 0.000064 s
+Vargsheliu irasymo laiku vidurkis: 0.011009 s
+Kietuoliu irasymo laiku vidurkis: 0.002020 s
+
+Bendras tetso laikas: 0.014958 s
+
+
+      10000 STUDENTU, strategija S1
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 0.015559 s
+Dalijimo laiku vidurkis: 0.001318 s
+Rusiuavimo laiku vidurkis: 0.001022 s
+Vargsheliu irasymo laiku vidurkis: 0.011843 s
+Kietuoliu irasymo laiku vidurkis: 0.007228 s
+
+Bendras tetso laikas: 0.036970 s
+
+
+      100000 STUDENTU, strategija S1
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 0.163940 s
+Dalijimo laiku vidurkis: 0.012416 s
+Rusiuavimo laiku vidurkis: 0.022607 s
+Vargsheliu irasymo laiku vidurkis: 0.076774 s
+Kietuoliu irasymo laiku vidurkis: 0.076260 s
+
+Bendras tetso laikas: 0.351997 s
+
+
+      1000000 STUDENTU, strategija S1
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 1.940322 s
+Dalijimo laiku vidurkis: 0.139732 s
+Rusiuavimo laiku vidurkis: 0.547523 s
+Vargsheliu irasymo laiku vidurkis: 0.614378 s
+Kietuoliu irasymo laiku vidurkis: 0.648306 s
+
+Bendras tetso laikas: 3.890260 s
+
+
+      10000000 STUDENTU, strategija S1
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 21.900433 s
+Dalijimo laiku vidurkis: 1.789229 s
+Rusiuavimo laiku vidurkis: 9.936966 s
+Vargsheliu irasymo laiku vidurkis: 6.351860 s
+Kietuoliu irasymo laiku vidurkis: 6.456407 s
+
+Bendras tetso laikas: 46.434895 s
+
+
+      1000 STUDENTU, strategija S2
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 0.001376 s
+Dalijimo laiku vidurkis: 0.000041 s
+Rusiuavimo laiku vidurkis: 0.000064 s
+Vargsheliu irasymo laiku vidurkis: 0.010196 s
+Kietuoliu irasymo laiku vidurkis: 0.001561 s
+
+Bendras tetso laikas: 0.013238 s
+
+
+      10000 STUDENTU, strategija S2
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 0.014632 s
+Dalijimo laiku vidurkis: 0.000481 s
+Rusiuavimo laiku vidurkis: 0.000754 s
+Vargsheliu irasymo laiku vidurkis: 0.011638 s
+Kietuoliu irasymo laiku vidurkis: 0.008635 s
+
+Bendras tetso laikas: 0.036139 s
+
+
+      100000 STUDENTU, strategija S2
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 0.162445 s
+Dalijimo laiku vidurkis: 0.005032 s
+Rusiuavimo laiku vidurkis: 0.023016 s
+Vargsheliu irasymo laiku vidurkis: 0.093229 s
+Kietuoliu irasymo laiku vidurkis: 0.079724 s
+
+Bendras tetso laikas: 0.363446 s
+
+
+      1000000 STUDENTU, strategija S2
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 1.957828 s
+Dalijimo laiku vidurkis: 0.049388 s
+Rusiuavimo laiku vidurkis: 0.578171 s
+Vargsheliu irasymo laiku vidurkis: 0.653149 s
+Kietuoliu irasymo laiku vidurkis: 0.668167 s
+
+Bendras tetso laikas: 3.906703 s
+
+
+      10000000 STUDENTU, strategija S2
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 21.726591 s
+Dalijimo laiku vidurkis: 0.500971 s
+Rusiuavimo laiku vidurkis: 9.931251 s
+Vargsheliu irasymo laiku vidurkis: 6.304220 s
+Kietuoliu irasymo laiku vidurkis: 6.348166 s
+
+Bendras tetso laikas: 44.811199 s
+
+
+      1000 STUDENTU, strategija Mano
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 0.001681 s
+Dalijimo laiku vidurkis: 0.000122 s
+Rusiuavimo laiku vidurkis: 0.000065 s
+Vargsheliu irasymo laiku vidurkis: 0.008814 s
+Kietuoliu irasymo laiku vidurkis: 0.003384 s
+
+Bendras tetso laikas: 0.014065 s
+
+
+      10000 STUDENTU, strategija Mano
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 0.020269 s
+Dalijimo laiku vidurkis: 0.001303 s
+Rusiuavimo laiku vidurkis: 0.000906 s
+Vargsheliu irasymo laiku vidurkis: 0.011213 s
+Kietuoliu irasymo laiku vidurkis: 0.007053 s
+
+Bendras tetso laikas: 0.040744 s
+
+
+      100000 STUDENTU, strategija Mano
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 0.161437 s
+Dalijimo laiku vidurkis: 0.012993 s
+Rusiuavimo laiku vidurkis: 0.022484 s
+Vargsheliu irasymo laiku vidurkis: 0.081198 s
+Kietuoliu irasymo laiku vidurkis: 0.074533 s
+
+Bendras tetso laikas: 0.352645 s
+
+
+      1000000 STUDENTU, strategija Mano
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 1.955036 s
+Dalijimo laiku vidurkis: 0.140800 s
+Rusiuavimo laiku vidurkis: 0.583342 s
+Vargsheliu irasymo laiku vidurkis: 0.661836 s
+Kietuoliu irasymo laiku vidurkis: 0.634957 s
+
+Bendras tetso laikas: 3.975971 s
+
+
+      10000000 STUDENTU, strategija Mano
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 21.898929 s
+Dalijimo laiku vidurkis: 2.040563 s
+Rusiuavimo laiku vidurkis: 9.722465 s
+Vargsheliu irasymo laiku vidurkis: 6.221858 s
+Kietuoliu irasymo laiku vidurkis: 6.257642 s
+
+Bendras tetso laikas: 46.141458 s
+
+
+      1000 STUDENTU, strategija Optimizuota
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 0.001987 s
+Dalijimo laiku vidurkis: 0.000209 s
+Rusiuavimo laiku vidurkis: 0.000068 s
+Vargsheliu irasymo laiku vidurkis: 0.008262 s
+Kietuoliu irasymo laiku vidurkis: 0.001452 s
+
+Bendras tetso laikas: 0.011979 s
+
+
+      10000 STUDENTU, strategija Optimizuota
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 0.016906 s
+Dalijimo laiku vidurkis: 0.001450 s
+Rusiuavimo laiku vidurkis: 0.000871 s
+Vargsheliu irasymo laiku vidurkis: 0.012275 s
+Kietuoliu irasymo laiku vidurkis: 0.009721 s
+
+Bendras tetso laikas: 0.041223 s
+
+
+      100000 STUDENTU, strategija Optimizuota
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 0.175251 s
+Dalijimo laiku vidurkis: 0.015464 s
+Rusiuavimo laiku vidurkis: 0.024357 s
+Vargsheliu irasymo laiku vidurkis: 0.077817 s
+Kietuoliu irasymo laiku vidurkis: 0.074619 s
+
+Bendras tetso laikas: 0.367507 s
+
+
+      1000000 STUDENTU, strategija Optimizuota
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 1.973327 s
+Dalijimo laiku vidurkis: 0.168690 s
+Rusiuavimo laiku vidurkis: 0.560189 s
+Vargsheliu irasymo laiku vidurkis: 0.662862 s
+Kietuoliu irasymo laiku vidurkis: 0.644103 s
+
+Bendras tetso laikas: 4.009171 s
+
+
+      10000000 STUDENTU, strategija Optimizuota
+-------------------------------------------------
+Nuskaitymo laiku vidurkis: 22.041852 s
+Dalijimo laiku vidurkis: 2.085997 s
+Rusiuavimo laiku vidurkis: 9.885684 s
+Vargsheliu irasymo laiku vidurkis: 6.236710 s
+Kietuoliu irasymo laiku vidurkis: 6.306659 s
+
+Bendras tetso laikas: 46.556903 s
