@@ -449,7 +449,7 @@ double Dalyti(Strategija strategija, Container& studentai, Container& vargseliai
         case Mano:
             return DalytiStudentus_Mano(studentai, vargseliai, kietuoliai);
         case Optimizuota:
-            break;
+            return DalytiStudentus_Optimizuota(studentai, vargseliai, kietuoliai);;
     }
     return 0.0;
 }
